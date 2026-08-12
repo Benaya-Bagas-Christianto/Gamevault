@@ -263,3 +263,13 @@ GameVault/
 ## 📄 Lisensi
 
 Proyek ini dilisensikan di bawah [MIT License](LICENSE).
+
+---
+
+<div align="center">
+
+Dibuat dan dirancang oleh **[Benaya Bagas Christianto](https://github.com/Benaya-Bagas-Christianto)**
+
+*Berdedikasi untuk mengembangkan platform game digital yang modern, aman, dan menyenangkan bagi para gamer Indonesia.*
+
+</div>
