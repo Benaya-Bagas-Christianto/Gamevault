@@ -1,6 +1,7 @@
 <div align="center">
+<img src="https://raw.githubusercontent.com/Benaya-Bagas-Christianto/Gamevault/main/public/images/logo-gamevault.png" alt="GameVault Logo" width="160" style="background:#0d0d0d; border-radius:16px; padding:20px;" />
 
-# 🎮 GameVault
+# GameVault
 
 ### Platform Jual Beli Game Digital PC — Lisensi Resmi, Pengiriman Instan
 
