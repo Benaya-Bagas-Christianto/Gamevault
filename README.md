@@ -14,59 +14,59 @@
 
 ---
 
-## 📖 Tentang GameVault
+##  Tentang GameVault
 
 **GameVault** adalah platform e-commerce khusus game digital PC yang dibangun menggunakan **Laravel 13** dengan desain antarmuka modern bergaya gelap (*dark mode*). Platform ini memungkinkan pengguna untuk membeli game digital dengan lisensi resmi, menerima *license key* secara instan melalui email, serta menikmati berbagai fitur eksklusif seperti sistem poin reward dan AI assistant berbasis Google Gemini.
 
-### ✨ Fitur Utama
+###  Fitur Utama
 
 | Fitur | Deskripsi |
 |---|---|
-| 🛒 **Toko Game Digital** | Katalog ratusan game PC dengan filter genre, harga, dan publisher |
-| 🔑 **Instant Key Delivery** | License key dikirim otomatis ke email setelah pembayaran berhasil |
-| 💳 **Payment Gateway** | Mendukung QRIS, Transfer Bank, GoPay, OVO, DANA, dan Alfamart via Midtrans |
-| 🤖 **VaultBot AI** | Asisten chat berbasis Google Gemini untuk membantu pengguna |
-| 🎁 **Sistem Poin** | Dapatkan poin dari setiap pembelian dan tukarkan dengan hadiah |
-| 📚 **Library** | Kelola seluruh game yang sudah dibeli dalam satu halaman |
-| ❤️ **Wishlist** | Simpan game favorit untuk dibeli nanti |
-| 🔄 **Sistem Refund** | Ajukan refund dalam 14 hari dengan alasan yang valid |
-| 🔐 **Keamanan Berlapis** | Autentikasi PIN, OTP via email, dan notifikasi keamanan |
-| 👨‍💼 **Admin Panel** | Dashboard admin lengkap untuk kelola game, transaksi, user, dan refund |
+|  **Toko Game Digital** | Katalog ratusan game PC dengan filter genre, harga, dan publisher |
+|  **Instant Key Delivery** | License key dikirim otomatis ke email setelah pembayaran berhasil |
+|  **Payment Gateway** | Mendukung QRIS, Transfer Bank, GoPay, OVO, DANA, dan Alfamart via Midtrans |
+|  **VaultBot AI** | Asisten chat berbasis Google Gemini untuk membantu pengguna |
+|  **Sistem Poin** | Dapatkan poin dari setiap pembelian dan tukarkan dengan hadiah |
+|  **Library** | Kelola seluruh game yang sudah dibeli dalam satu halaman |
+|  **Wishlist** | Simpan game favorit untuk dibeli nanti |
+|  **Sistem Refund** | Ajukan refund dalam 14 hari dengan alasan yang valid |
+|  **Keamanan Berlapis** | Autentikasi PIN, OTP via email, dan notifikasi keamanan |
+|  **Admin Panel** | Dashboard admin lengkap untuk kelola game, transaksi, user, dan refund |
 
 ---
 
-## 🔌 API yang Digunakan
+##  API yang Digunakan
 
-### 1. 🎮 Steam Store API
+### 1.  Steam Store API
 > **Sumber data game otomatis langsung dari Valve**
 
 Digunakan untuk mengambil data game secara otomatis dari database Steam, termasuk:
-- 📝 Deskripsi dan detail game
-- 🖼️ Header image, screenshot, dan trailer video
-- 🏷️ Genre, kategori, dan developer/publisher
-- 💻 Spesifikasi minimum & rekomendasi PC
-- 💰 Informasi harga referensi
+-  Deskripsi dan detail game
+-  Header image, screenshot, dan trailer video
+-  Genre, kategori, dan developer/publisher
+-  Spesifikasi minimum & rekomendasi PC
+-  Informasi harga referensi
 
 **Endpoint:**
 ```
 GET https://store.steampowered.com/api/appdetails?appids={APP_ID}&cc=id&l=indonesian
 GET https://store.steampowered.com/api/storesearch/?term={QUERY}&l=indonesian
 ```
-> ✅ **Gratis** — Tidak memerlukan API Key
+>  **Gratis** — Tidak memerlukan API Key
 
 ---
 
-### 2. 💳 Midtrans Payment Gateway
+### 2.  Midtrans Payment Gateway
 > **Pemrosesan pembayaran yang aman dan terpercaya**
 
 Digunakan untuk memproses semua transaksi pembelian di GameVault. Mendukung berbagai metode pembayaran populer di Indonesia.
 
 **Metode Pembayaran yang Didukung:**
-- 📱 QRIS (semua e-wallet)
-- 🏦 Transfer Bank Virtual Account (BCA, BNI, BRI, Mandiri, Permata)
-- 💚 GoPay & OVO
-- 🏪 Alfamart & Indomaret
-- 💳 Kartu Kredit / Debit (Visa & Mastercard)
+-  QRIS (semua e-wallet)
+-  Transfer Bank Virtual Account (BCA, BNI, BRI, Mandiri, Permata)
+-  GoPay & OVO
+-  Alfamart & Indomaret
+-  Kartu Kredit / Debit (Visa & Mastercard)
 
 **Cara Mendapatkan API Key:**
 1. Daftar di [https://dashboard.midtrans.com](https://dashboard.midtrans.com)
@@ -84,7 +84,7 @@ MIDTRANS_IS_3DS=true
 
 ---
 
-### 3. 🤖 Google Gemini AI API
+### 3.  Google Gemini AI API
 > **Otak di balik VaultBot — Asisten AI GameVault**
 
 Digunakan untuk fitur **VaultBot**, asisten chat yang membantu pengguna menjawab pertanyaan seputar game, merekomendasikan game, dan menjelaskan fitur-fitur GameVault.
@@ -103,14 +103,14 @@ GEMINI_API_KEY=AIzaSy_xxxxxxxxxxxxxxxxxxxxxx
 
 ---
 
-### 4. 📧 SMTP Email (Mail Driver)
+### 4.  SMTP Email (Mail Driver)
 > **Notifikasi email untuk semua aktivitas penting**
 
 Digunakan untuk mengirim:
-- 🔑 License key setelah pembelian berhasil
-- 🔢 Kode OTP untuk ganti email & reset PIN
-- ✅ Konfirmasi refund
-- 🔔 Notifikasi keamanan (ganti password/PIN)
+-  License key setelah pembelian berhasil
+-  Kode OTP untuk ganti email & reset PIN
+-  Konfirmasi refund
+-  Notifikasi keamanan (ganti password/PIN)
 
 **Konfigurasi di `.env` (contoh menggunakan Gmail):**
 ```env
@@ -123,11 +123,11 @@ MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=emailkamu@gmail.com
 MAIL_FROM_NAME="GameVault"
 ```
-> 💡 Untuk Gmail, aktifkan **2-Factor Authentication** lalu buat **App Password** di pengaturan akun Google.
+>  Untuk Gmail, aktifkan **2-Factor Authentication** lalu buat **App Password** di pengaturan akun Google.
 
 ---
 
-## 🚀 Cara Instalasi & Penggunaan
+##  Cara Instalasi & Penggunaan
 
 ### Prasyarat
 - **PHP** >= 8.2 dengan ekstensi: `mbstring`, `openssl`, `pdo`, `fileinfo`
@@ -214,7 +214,7 @@ Buka browser dan akses: **[http://localhost:8000](http://localhost:8000)** 🎉
 
 ---
 
-## 📂 Struktur Proyek Penting
+##  Struktur Proyek Penting
 
 ```
 GameVault/
@@ -243,7 +243,7 @@ GameVault/
 
 ---
 
-## 🛡️ Keamanan
+##  Keamanan
 
 - File `.env` (berisi API Key & password) sudah dikecualikan dari repositori ini via `.gitignore`
 - Semua password di-*hash* menggunakan `bcrypt`
@@ -252,7 +252,7 @@ GameVault/
 
 ---
 
-## 👨‍💻 Developer
+##  Developer
 
 **Benaya Bagas Christianto**
 
@@ -260,7 +260,7 @@ GameVault/
 
 ---
 
-## 📄 Lisensi
+##  Lisensi
 
 Proyek ini dilisensikan di bawah [MIT License](LICENSE).
 
