@@ -317,8 +317,8 @@ class ProfilController extends Controller
         // Trik khusus untuk Localhost: Jika status masih Pending, kita tanya langsung ke server Midtrans!
         $pending_ids = \App\Models\Transaksi::whereIn('id', $ids)->where('status', 'Pending')->pluck('id');
         if (count($pending_ids) > 0) {
-            \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
-            \Midtrans\Config::$isProduction = config('services.midtrans.is_production');
+            \Midtrans\Config::$serverKey = 'Mid-server-tADVX9-15wfmU2wUv60szXql';
+            \Midtrans\Config::$isProduction = false;
             
             foreach ($pending_ids as $id) {
                 try {

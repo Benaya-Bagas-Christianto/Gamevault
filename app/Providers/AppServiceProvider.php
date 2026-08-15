@@ -23,10 +23,6 @@ class AppServiceProvider extends ServiceProvider
     {
         \Illuminate\Pagination\Paginator::defaultView('vendor.pagination.custom');
 
-        if (env('APP_ENV') === 'production') {
-            \Illuminate\Support\Facades\URL::forceScheme('https');
-        }
-
         // Customize password reset email
         ResetPassword::toMailUsing(function (object $notifiable, string $token) {
             $url = url(route('password.reset', [
