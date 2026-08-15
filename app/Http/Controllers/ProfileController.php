@@ -249,8 +249,8 @@ class ProfileController extends Controller
 
         $pending_ids = \App\Models\Transaction::whereIn('id', $ids)->where('status', 'pending')->pluck('id');
         if (count($pending_ids) > 0) {
-            \Midtrans\Config::$serverKey = 'Mid-server-tADVX9-15wfmU2wUv60szXql'; // Ganti dari ENV later
-            \Midtrans\Config::$isProduction = false;
+            \Midtrans\Config::$serverKey = config('services.midtrans.server_key');
+            \Midtrans\Config::$isProduction = config('services.midtrans.is_production');
             
             foreach ($pending_ids as $id) {
                 try {
