@@ -12,9 +12,28 @@ class CartController extends Controller
     {
         $user = Auth::user();
         $cartGames   = $user->cartGames()->active()->get();
-        $total       = $cartGames->sum('price');
-        $subtotal    = $total;
-        $discount    = 0;
+        $subtotal    = $cartGames->sum('price');
+        
+        // Calculate bundle discount (15% off base game and DLCs when bought together)
+        $discount = 0;
+        $baseGameIds = $cartGames->where('type', 'game')->pluck('id')->toArray();
+        $discountedItems = [];
+
+        foreach ($cartGames as $item) {
+            if ($item->type === 'dlc' && in_array($item->parent_id, $baseGameIds)) {
+                if (!in_array($item->id, $discountedItems)) {
+                    $discount += $item->price * 0.15;
+                    $discountedItems[] = $item->id;
+                }
+                if (!in_array($item->parent_id, $discountedItems)) {
+                    $parentPrice = $cartGames->firstWhere('id', $item->parent_id)->price;
+                    $discount += $parentPrice * 0.15;
+                    $discountedItems[] = $item->parent_id;
+                }
+            }
+        }
+        
+        $total = $subtotal - $discount;
         
         $wishlisted = $user->wishlistedGames;
         $owned = $user->ownedGames;
@@ -70,12 +89,16 @@ class CartController extends Controller
                 $dlcs = $cartGames->where('type', 'dlc')->where('parent_id', $game->id);
                 if ($dlcs->isNotEmpty()) {
                     $items = collect([$game])->concat($dlcs);
+                    
+                    // Display price for bundle includes 15% discount
+                    $bundlePrice = $items->sum('price') * 0.85;
+                    
                     $cartGroups[] = [
                         'is_bundle' => true,
                         'parent' => $game,
                         'items' => $items,
                         'title' => $game->title . ' Bundle',
-                        'price' => $items->sum('price'),
+                        'price' => $bundlePrice,
                         'original_price' => $items->sum('original_price'),
                     ];
                     $processedIds = array_merge($processedIds, $items->pluck('id')->toArray());

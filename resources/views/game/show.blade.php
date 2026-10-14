@@ -93,8 +93,300 @@
         }
         @media (max-width: 992px) {
             .game-header-grid {
-                grid-template-columns: 1fr;
+                display: flex;
+                flex-direction: column-reverse;
+                gap: 24px;
             }
+        }
+
+        /* Steam-style Purchase Card Actions */
+        .game-purchase-action-wrapper {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .game-purchase-pill {
+            display: inline-flex;
+            align-items: stretch;
+            background: #000;
+            border-radius: 2px;
+            min-height: 42px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            max-width: 100%;
+        }
+
+        .game-purchase-discount {
+            background: var(--c-primary);
+            color: #000;
+            font-size: 1.35rem;
+            font-weight: 800;
+            padding: 0 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            flex-shrink: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .game-purchase-price-box {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 4px 12px;
+            background: #000;
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-width: fit-content;
+        }
+
+        .game-price-original {
+            color: var(--c-mute);
+            text-decoration: line-through;
+            font-size: 0.75rem;
+            line-height: 1.2;
+            white-space: nowrap;
+            display: block;
+        }
+
+        .game-price-current {
+            color: var(--c-primary);
+            font-size: 0.98rem;
+            font-weight: 700;
+            line-height: 1.2;
+            white-space: nowrap;
+            margin-top: 2px;
+            display: block;
+        }
+
+        .game-purchase-btn {
+            border-radius: 0;
+            padding: 0 18px;
+            color: #000;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            font-size: 0.92rem;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: var(--c-primary);
+            transition: filter 0.2s, background 0.2s;
+            text-decoration: none;
+        }
+        .game-purchase-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .game-bundle-info-btn {
+            height: 42px;
+            padding: 0 16px;
+            background: #000;
+            color: var(--c-primary);
+            font-weight: 600;
+            font-size: 0.88rem;
+            border: 1px solid var(--c-primary);
+            border-radius: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .game-bundle-info-btn:hover {
+            background: var(--c-primary);
+            color: #000;
+            text-decoration: none;
+        }
+
+        @media (max-width: 600px) {
+            .game-purchase-action-wrapper {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .game-bundle-info-btn {
+                width: 100%;
+                height: 38px;
+            }
+            .game-purchase-pill {
+                display: flex;
+                width: 100%;
+                min-height: 44px;
+            }
+            .game-purchase-discount {
+                font-size: 1.15rem;
+                padding: 0 10px;
+            }
+            .game-purchase-price-box {
+                flex: 1;
+                padding: 4px 10px;
+            }
+            .game-price-original {
+                font-size: 0.72rem;
+            }
+            .game-price-current {
+                font-size: 0.92rem;
+            }
+            .game-purchase-btn {
+                padding: 0 14px;
+                font-size: 0.88rem;
+            }
+            .game-dlc-preview-card {
+                padding: 16px 12px;
+                margin-top: 24px;
+                margin-bottom: 24px;
+            }
+            .game-dlc-preview-header {
+                gap: 8px;
+            }
+            .game-dlc-preview-header h2 {
+                font-size: 0.95rem;
+            }
+            .game-dlc-browse-all-btn {
+                font-size: 0.78rem;
+                padding: 4px 10px;
+            }
+            .game-dlc-preview-row {
+                padding: 9px 10px;
+                gap: 10px;
+            }
+            .game-dlc-preview-title {
+                font-size: 0.84rem;
+            }
+            .game-dlc-preview-price {
+                font-size: 0.84rem;
+            }
+            .game-dlc-preview-footer {
+                padding: 10px 10px;
+                gap: 8px;
+            }
+            .game-dlc-preview-footer-text {
+                font-size: 0.72rem;
+            }
+            .game-dlc-see-all-btn {
+                font-size: 0.75rem;
+                padding: 4px 10px;
+            }
+        }
+
+        /* DLC Preview Section in Game Detail */
+        .game-dlc-preview-card {
+            margin-top: 32px;
+            border: 1px solid var(--c-primary);
+            border-radius: 0;
+            overflow: hidden;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+        .game-dlc-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            gap: 12px;
+        }
+        .game-dlc-preview-header h2 {
+            color: var(--c-ink);
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        .game-dlc-browse-all-btn {
+            color: var(--c-ink);
+            text-decoration: none;
+            font-size: 0.85rem;
+            background: var(--c-surface-soft);
+            padding: 5px 14px;
+            border-radius: 0;
+            border: 1px solid var(--c-hairline);
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        .game-dlc-browse-all-btn:hover {
+            background: var(--c-surface-elevated);
+            border-color: var(--c-primary);
+        }
+        .game-dlc-preview-table {
+            background: var(--c-surface-dark);
+            border-left: 4px solid var(--c-primary);
+            border-top: 1px solid var(--c-hairline);
+            border-right: 1px solid var(--c-hairline);
+        }
+        .game-dlc-preview-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--c-hairline);
+            transition: background 0.2s;
+        }
+        .game-dlc-preview-title {
+            color: var(--c-ink);
+            font-size: 0.92rem;
+            font-weight: 500;
+            min-width: 0;
+            flex: 1;
+            word-break: break-word;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .game-dlc-preview-price {
+            flex-shrink: 0;
+            white-space: nowrap;
+            text-align: right;
+            font-size: 0.92rem;
+            font-weight: 700;
+        }
+        .game-dlc-preview-footer {
+            background: var(--c-canvas);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+        }
+        .game-dlc-preview-footer-text {
+            color: var(--c-mute);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .game-dlc-see-all-btn {
+            background: var(--c-surface-soft);
+            color: var(--c-ink);
+            font-weight: 600;
+            font-size: 0.8rem;
+            border: 1px solid var(--c-hairline);
+            padding: 5px 14px;
+            border-radius: 0;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        .game-dlc-see-all-btn:hover {
+            background: var(--c-surface-elevated);
+            border-color: var(--c-primary);
         }
     </style>
 
@@ -291,9 +583,9 @@
         <div style="display:flex;flex-direction:column;height:100%;">
             <div style="border-radius: 0;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,0.5); margin-bottom: 24px; flex-shrink:0;">
                 @if($game->cover_image)
-                    <img src="{{ $game->cover_image_url }}" alt="{{ $game->title }}" style="width:100%;display:block;aspect-ratio:16/9;object-fit:cover;background:#111;">
+                    <img src="{{ $game->cover_image_url }}" alt="{{ $game->title }}" style="width:100%;display:block;aspect-ratio:460/215;object-fit:cover;background:#111;">
                 @else
-                    <div style="width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#1a1a1a,#0d2200);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;">
+                    <div style="width:100%;aspect-ratio:460/215;background:linear-gradient(135deg,#1a1a1a,#0d2200);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;">
                         <i class="fas fa-gamepad" style="font-size:3rem;color:rgba(118,185,0,0.5);"></i>
                     </div>
                 @endif
@@ -407,37 +699,39 @@
         
         @if($isOwned)
         {{-- IN LIBRARY Banner --}}
-        <div style="background: rgba(118, 185, 0, 0.1); border: 1px solid var(--c-primary); border-radius: 0; padding: 16px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
-            <div style="background: var(--c-primary); color: #000; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 0; display: flex; align-items: center; gap: 6px;">
+        <div style="background: rgba(118, 185, 0, 0.1); border: 1px solid var(--c-primary); border-radius: 0; padding: 16px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;">
+            <div style="background: var(--c-primary); color: #000; font-size: 0.75rem; font-weight: 800; padding: 4px 10px; border-radius: 0; display: flex; align-items: center; gap: 6px; white-space: nowrap; flex-shrink: 0;">
                 <i class="fas fa-bars"></i> DI LIBRARY
             </div>
-            <div style="color: var(--c-primary); font-size: 1.1rem; font-weight: 600;">
+            <div style="color: var(--c-primary); font-size: 1.1rem; font-weight: 600; flex-grow: 1; min-width: 200px;">
                 {{ $game->title }} sudah ada di library kamu.
             </div>
             <div style="margin-left: auto;">
-                <a href="{{ route('library.index') }}" class="btn-primary" style="padding: 8px 16px; font-weight: 600; border-radius: 0; text-decoration: none; display: inline-block;">Lihat di Library</a>
+                <a href="{{ route('library.index') }}" class="btn-primary" style="padding: 8px 16px; font-weight: 600; border-radius: 0; text-decoration: none; display: inline-block; white-space: nowrap; text-align: center;">Lihat di Library</a>
             </div>
         </div>
         @endif
         @if(empty($game->packages) || count($game->packages) == 0 || $game->price == 0)
             {{-- Base game purchase/claim box --}}
-            <div class="card-dark" style="border: 1px solid var(--c-primary); border-radius: 0; padding: 16px 16px 12px 16px; margin-bottom: 36px; position: relative;">
-                <h3 style="color:var(--c-ink); font-size: 1.35rem; font-weight: 700; margin: 0 0 4px 0; word-break:break-word;">
+            <div class="card-dark" style="border: 1px solid var(--c-primary); border-radius: 0; padding: 16px; margin-bottom: 24px; position: relative;">
+                <h3 style="color:var(--c-ink); font-size: 1.25rem; font-weight: 700; margin: 0 0 4px 0; word-break:break-word;">
                     @if($game->price == 0) Mainkan @else Beli @endif {{ $game->title }}
                 </h3>
                 
                 @if($game->original_price > $game->price || $game->discount_percent > 0)
-                <div style="color: var(--c-primary); font-size: 0.85rem; font-weight: 600; margin-bottom: 4px;">PENAWARAN SPESIAL! Promo terbatas</div>
+                <div style="color: var(--c-primary); font-size: 0.85rem; font-weight: 600; margin-bottom: 12px;">PENAWARAN SPESIAL! Promo terbatas</div>
+                @else
+                <div style="margin-bottom: 12px;"></div>
                 @endif
                 
-                <div style="display: flex; justify-content: flex-end; align-items: flex-end; position: absolute; bottom: -17px; right: 16px; z-index: 10;">
-                    <div style="display: flex; align-items: center; background: #000; border-radius: 2px; padding: 2px; height: 38px; box-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+                <div class="game-purchase-action-wrapper">
+                    <div class="game-purchase-pill">
                         @if($game->price == 0)
-                             <div style="color: #c6d4df; font-size: 0.95rem; font-weight: 600; padding: 0 16px;">Free To Play</div>
+                             <div style="color: #c6d4df; font-size: 0.95rem; font-weight: 600; padding: 0 16px; display: flex; align-items: center; white-space: nowrap;">Free To Play</div>
                              @if($isOwned)
-                                <button style="height: 100%; border-radius: 2px; padding: 0 16px; font-weight: 500; border:none; cursor:not-allowed; background:#333; color:#aaa;">Sudah Dimiliki</button>
+                                <button style="border-radius: 0; padding: 0 16px; font-weight: 500; border:none; cursor:not-allowed; background:#333; color:#aaa; font-size: 0.95rem;">Sudah Dimiliki</button>
                              @else
-                                <button onclick="claimFreeGame('{{ $game->slug }}')" style="height: 100%; border-radius: 2px; padding: 0 16px; background: linear-gradient(to right, #75b022 5%, #588a1b 95%); color: #000; font-weight: 700; border:none; cursor:pointer;" onmouseenter="this.style.background='linear-gradient(to right, #8ed629 5%, #6aa621 95%)'; this.style.color='#000';" onmouseleave="this.style.background='linear-gradient(to right, #75b022 5%, #588a1b 95%)'; this.style.color='#000';">
+                                <button onclick="claimFreeGame('{{ $game->slug }}')" class="game-purchase-btn" style="background: linear-gradient(to right, #75b022 5%, #588a1b 95%); color: #000;">
                                     Tambah ke Library
                                 </button>
                              @endif
@@ -446,18 +740,18 @@
                                 @php
                                     $usedDiscount = $game->discount_percent > 0 ? $game->discount_percent : round((($game->original_price - $game->price) / $game->original_price) * 100);
                                 @endphp
-                                <div style="background: var(--c-primary); color: #000; font-size: 1.4rem; font-weight: 800; padding: 0 8px; line-height: 34px; height: 34px;">-{{ $usedDiscount }}%</div>
-                                <div style="display: flex; flex-direction: column; align-items: flex-end; justify-content: center; padding: 0 10px; background: #000; height: 34px;">
-                                    <div style="color: var(--c-mute); text-decoration: line-through; font-size: 0.75rem; line-height: 1.2;">Rp {{ number_format($game->original_price, 0, ',', '.') }}</div>
-                                    <div style="color: var(--c-primary); font-size: 0.95rem; font-weight: 600; line-height: 1.2;">Rp {{ number_format($game->price, 0, ',', '.') }}</div>
+                                <div class="game-purchase-discount">-{{ $usedDiscount }}%</div>
+                                <div class="game-purchase-price-box">
+                                    <span class="game-price-original">Rp {{ number_format($game->original_price, 0, ',', '.') }}</span>
+                                    <span class="game-price-current">Rp {{ number_format($game->price, 0, ',', '.') }}</span>
                                 </div>
                             @else
-                                <div style="color:var(--c-ink); font-size: 1.1rem; font-weight: 700; padding: 0 16px; background: #000; height: 34px; line-height: 34px;">Rp {{ number_format($game->price, 0, ',', '.') }}</div>
+                                <div style="color:var(--c-ink); font-size: 1.05rem; font-weight: 700; padding: 0 16px; background: #000; display: flex; align-items: center; white-space: nowrap;">Rp {{ number_format($game->price, 0, ',', '.') }}</div>
                             @endif
                             @if($isOwned)
-                                <button style="height: 34px; border-radius: 0; padding: 0 16px; font-weight: 700; border:none; cursor:not-allowed; background:#333; color:#aaa; font-size: 0.95rem;">Sudah Dimiliki</button>
+                                <button style="border-radius: 0; padding: 0 16px; font-weight: 700; border:none; cursor:not-allowed; background:#333; color:#aaa; font-size: 0.95rem;">Sudah Dimiliki</button>
                             @else
-                                <button class="cart-btn btn-primary" data-game-slug="{{ $game->slug }}" style="height: 34px; border-radius: 0; padding: 0 16px; color: #000; font-weight: 700; border:none; cursor:pointer; font-size: 0.95rem;">
+                                <button class="cart-btn game-purchase-btn" data-game-slug="{{ $game->slug }}">
                                     @if($isInCart) Di Keranjang @else Tambah ke Keranjang @endif
                                 </button>
                             @endif
@@ -469,8 +763,8 @@
 
         @if($game->packages && is_array($game->packages) && count($game->packages) > 0)
             @foreach($game->packages as $package)
-            <div class="card-dark" style="border: 1px solid var(--c-primary); border-radius: 0; padding: 16px 16px 12px 16px; margin-bottom: 36px; position: relative;">
-                <h3 style="color:var(--c-ink); font-size: 1.35rem; font-weight: 700; margin: 0 0 4px 0; word-break:break-word;">
+            <div class="card-dark" style="border: 1px solid var(--c-primary); border-radius: 0; padding: 16px; margin-bottom: 24px; position: relative;">
+                <h3 style="color:var(--c-ink); font-size: 1.25rem; font-weight: 700; margin: 0 0 4px 0; word-break:break-word;">
                     Beli {{ $package['name'] }}
                 </h3>
                 
@@ -479,34 +773,32 @@
                 @endif
                 
                 @if(strpos(strtolower($package['name']), 'edition') !== false || strpos(strtolower($package['name']), 'bundle') !== false)
-                <div style="color: var(--c-mute); font-size: 0.85rem; margin-bottom: 4px;">
+                <div style="color: var(--c-mute); font-size: 0.85rem; margin-bottom: 12px;">
                     <span style="color: var(--c-primary); font-weight: 600;">Includes:</span> {{ $package['name'] }}
                 </div>
+                @else
+                <div style="margin-bottom: 12px;"></div>
                 @endif
                 
-                <div style="display: flex; justify-content: flex-end; align-items: flex-end; position: absolute; bottom: -17px; right: 16px; z-index: 10;">
-                    <div style="display: flex; align-items: center; background: #000; border-radius: 2px; padding: 2px; height: 38px; box-shadow: 0 2px 10px rgba(0,0,0,0.5);">
+                <div class="game-purchase-action-wrapper">
+                    <div class="game-purchase-pill">
                         @if($package['price'] == 0)
-                             <div style="color: #c6d4df; font-size: 0.95rem; font-weight: 600; padding: 0 16px;">Free To Play</div>
-                             <button onclick="claimFreeGame('{{ $game->slug }}')" style="height: 100%; border-radius: 2px; padding: 0 16px; background: linear-gradient(to right, #75b022 5%, #588a1b 95%); color: #000; font-weight: 700; border:none; cursor:pointer;" onmouseenter="this.style.background='linear-gradient(to right, #8ed629 5%, #6aa621 95%)'; this.style.color='#000';" onmouseleave="this.style.background='linear-gradient(to right, #75b022 5%, #588a1b 95%)'; this.style.color='#000';">
+                             <div style="color: #c6d4df; font-size: 0.95rem; font-weight: 600; padding: 0 16px; display: flex; align-items: center; white-space: nowrap;">Free To Play</div>
+                             <button onclick="claimFreeGame('{{ $game->slug }}')" class="game-purchase-btn" style="background: linear-gradient(to right, #75b022 5%, #588a1b 95%); color: #000;">
                                  Tambah ke Library
                              </button>
                         @else
                             @if($package['discount_percent'] > 0)
-                                <div style="background: var(--c-primary); color: #000; font-size: 1.4rem; font-weight: 800; padding: 0 8px; line-height: 34px; height: 34px;">-{{ $package['discount_percent'] }}%</div>
-                                <div style="display: flex; flex-direction: column; align-items: flex-end; justify-content: center; padding: 0 10px; background: #000; height: 34px;">
-                                    <div style="color: var(--c-mute); text-decoration: line-through; font-size: 0.75rem; line-height: 1.2;">Rp {{ number_format($package['original_price'], 0, ',', '.') }}</div>
-                                    <div style="color: var(--c-primary); font-size: 0.95rem; font-weight: 600; line-height: 1.2;">Rp {{ number_format($package['price'], 0, ',', '.') }}</div>
+                                <div class="game-purchase-discount">-{{ $package['discount_percent'] }}%</div>
+                                <div class="game-purchase-price-box">
+                                    <span class="game-price-original">Rp {{ number_format($package['original_price'], 0, ',', '.') }}</span>
+                                    <span class="game-price-current">Rp {{ number_format($package['price'], 0, ',', '.') }}</span>
                                 </div>
                             @else
-                                <div style="color:var(--c-ink); font-size: 1.1rem; font-weight: 700; padding: 0 16px; background: #000; height: 34px; line-height: 34px;">Rp {{ number_format($package['price'], 0, ',', '.') }}</div>
+                                <div style="color:var(--c-ink); font-size: 1.05rem; font-weight: 700; padding: 0 16px; background: #000; display: flex; align-items: center; white-space: nowrap;">Rp {{ number_format($package['price'], 0, ',', '.') }}</div>
                             @endif
-                            <button class="cart-btn btn-primary" data-game-slug="{{ $game->slug }}" style="height: 34px; border-radius: 0; padding: 0 16px; color: #000; font-weight: 700; border:none; cursor:pointer; font-size: 0.95rem;">
-                                @if($isInCart)
-                                    Di Keranjang
-                                @else
-                                    Tambah ke Keranjang
-                                @endif
+                            <button class="cart-btn game-purchase-btn" data-game-slug="{{ $game->slug }}">
+                                @if($isInCart) Di Keranjang @else Tambah ke Keranjang @endif
                             </button>
                         @endif
                     </div>
@@ -521,58 +813,63 @@
             $bundleOriginalPrice = $game->price + $game->dlcs->sum('price');
             $bundleDiscountPrice = $bundleOriginalPrice * 0.85; // 15% discount
         @endphp
-        <div class="card-dark" style="border: 1px solid var(--c-primary); border-radius: 0; padding: 16px 16px 12px 16px; margin-bottom: 36px; position: relative;">
-            <h3 style="color:var(--c-ink); font-size: 1.35rem; font-weight: 700; margin: 0 0 4px 0; word-break:break-word;">
-                Beli {{ $game->title }} BUNDLE <span style="font-size: 0.85rem; color: var(--c-mute); font-weight: 600;">(?)</span>
+        <div class="card-dark" style="border: 1px solid var(--c-primary); border-radius: 0; padding: 16px; margin-bottom: 24px; position: relative;">
+            <h3 style="color:var(--c-ink); font-size: 1.25rem; font-weight: 700; margin: 0 0 4px 0; word-break:break-word;">
+                Beli {{ $game->title }} BUNDLE <a href="{{ route('game.bundle', $game->slug) }}" title="Lihat Informasi Lengkap Bundle" style="font-size: 0.85rem; color: var(--c-primary); text-decoration: none; font-weight: 700;">(?)</a>
             </h3>
             
-            <div style="color: var(--c-mute); font-size: 0.85rem; margin-bottom: 4px;">
+            <div style="color: var(--c-mute); font-size: 0.85rem; margin-bottom: 12px;">
                 Beli bundle ini untuk menghemat 15% dari {{ $game->dlcs->count() + 1 }} item!
             </div>
             
-            <div style="display: flex; justify-content: flex-end; align-items: flex-end; position: absolute; bottom: -17px; right: 16px; z-index: 10;">
-                <button style="height: 34px; padding: 0 16px; background: #000; color: var(--c-primary); font-weight: 600; border: 1px solid var(--c-primary); border-radius: 2px; margin-right: 2px; cursor: pointer; align-self: center; margin-bottom: 2px;" onmouseenter="this.style.background='var(--c-primary)'; this.style.color='#000';" onmouseleave="this.style.background='#000'; this.style.color='var(--c-primary)';">Bundle info</button>
-                <div style="display: flex; align-items: center; background: #000; border-radius: 2px; padding: 2px; height: 38px; box-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-                    <div style="color: var(--c-mute); font-size: 1.1rem; font-weight: 600; padding: 0 8px; line-height: 34px; height: 34px;">-15%</div>
-                    <div style="background: var(--c-primary); color: #000; font-size: 1.4rem; font-weight: 800; padding: 0 8px; line-height: 34px; height: 34px;">-85%</div>
-                    <div style="display: flex; flex-direction: column; align-items: flex-end; justify-content: center; padding: 0 10px; background: #000; height: 34px;">
-                        <div style="color: var(--c-mute); text-decoration: line-through; font-size: 0.75rem; line-height: 1.2;">Rp {{ number_format($bundleOriginalPrice, 0, ',', '.') }}</div>
-                        <div style="color: var(--c-primary); font-size: 0.95rem; font-weight: 600; line-height: 1.2;">Rp {{ number_format($bundleDiscountPrice, 0, ',', '.') }}</div>
+            <div class="game-purchase-action-wrapper">
+                <a href="{{ route('game.bundle', $game->slug) }}" class="game-bundle-info-btn">Bundle info</a>
+                <div class="game-purchase-pill">
+                    <div class="game-purchase-discount">-15%</div>
+                    <div class="game-purchase-price-box">
+                        <span class="game-price-original">Rp {{ number_format($bundleOriginalPrice, 0, ',', '.') }}</span>
+                        <span class="game-price-current">Rp {{ number_format($bundleDiscountPrice, 0, ',', '.') }}</span>
                     </div>
-                    <button class="btn-primary" onclick="addAllToCart('{{ $game->slug }}')" style="height: 34px; border-radius: 0; padding: 0 16px; color: #000; font-weight: 700; border:none; cursor:pointer; font-size: 0.95rem;">
-                        Tambah ke Keranjang
-                    </button>
+                    @if($isBundleInCart)
+                        <button class="game-purchase-btn" style="cursor:not-allowed; opacity:0.7;" disabled>
+                            Di Keranjang
+                        </button>
+                    @else
+                        <button class="game-purchase-btn" onclick="addAllToCart('{{ $game->slug }}')">
+                            Tambah ke Keranjang
+                        </button>
+                    @endif
                 </div>
             </div>
         </div>
 
         {{-- Content For This Game --}}
-        <div class="card-dark" style="margin-top: 32px; border: 1px solid var(--c-primary); border-radius: 0; overflow: hidden; padding: 24px; margin-bottom:32px;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 16px;">
-                <h2 style="color:var(--c-ink); font-size: 1.2rem; font-weight: 700; margin: 0; text-transform: uppercase;">Content For This Game</h2>
-                <a href="{{ route('game.dlc', $game->slug) }}" style="color: var(--c-ink); text-decoration: none; font-size: 0.85rem; background: var(--c-surface-soft); padding: 4px 12px; border-radius: 0; border: 1px solid var(--c-hairline);">Browse all ({{ $game->dlcs->count() }})</a>
+        <div class="card-dark game-dlc-preview-card">
+            <div class="game-dlc-preview-header">
+                <h2>Content For This Game</h2>
+                <a href="{{ route('game.dlc', $game->slug) }}" class="game-dlc-browse-all-btn">Browse all ({{ $game->dlcs->count() }})</a>
             </div>
             
-            <div style="background: var(--c-surface-dark); border-left: 4px solid var(--c-primary); border-top: 1px solid var(--c-hairline); border-right: 1px solid var(--c-hairline);">
+            <div class="game-dlc-preview-table">
                 @foreach($game->dlcs->take(5) as $idx => $dlc)
-                    <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; background: {{ $idx % 2 == 0 ? 'var(--c-surface-soft)' : 'transparent' }}; border-bottom: 1px solid var(--c-hairline); transition: background 0.2s;" onmouseenter="this.style.background='rgba(118,185,0,0.1)';" onmouseleave="this.style.background='{{ $idx % 2 == 0 ? 'var(--c-surface-soft)' : 'transparent' }}';">
-                        <div style="color: var(--c-ink); font-size: 0.95rem; font-weight: 500; min-width:0; word-break:break-word;">{{ $dlc->title }}</div>
-                        <div style="display: flex; align-items: center; gap: 16px;">
+                    <div class="game-dlc-preview-row" style="background: {{ $idx % 2 == 0 ? 'var(--c-surface-soft)' : 'transparent' }};" onmouseenter="this.style.background='rgba(118,185,0,0.1)';" onmouseleave="this.style.background='{{ $idx % 2 == 0 ? 'var(--c-surface-soft)' : 'transparent' }}';">
+                        <div class="game-dlc-preview-title">{{ $dlc->title }}</div>
+                        <div class="game-dlc-preview-price">
                             @if($dlc->price == 0)
-                                <div style="color: var(--c-primary); font-size: 0.95rem; font-weight: 600;">Free</div>
+                                <span style="color: var(--c-primary);">Free</span>
                             @else
-                                <div style="color:var(--c-ink); font-size: 0.95rem; font-weight: 600;">Rp {{ number_format($dlc->price, 0, ',', '.') }}</div>
+                                <span style="color: var(--c-ink);">Rp {{ number_format($dlc->price, 0, ',', '.') }}</span>
                             @endif
                         </div>
                     </div>
                 @endforeach
                 
                 {{-- Bottom Bar --}}
-                <div style="background: var(--c-canvas); display: flex; justify-content: flex-end; align-items: center; padding: 12px 16px;">
-                    <div style="color: var(--c-mute); font-size: 0.8rem; text-transform: uppercase; font-weight:600;">
+                <div class="game-dlc-preview-footer">
+                    <div class="game-dlc-preview-footer-text">
                         SHOWING 1 - {{ min(5, $game->dlcs->count()) }} OF {{ $game->dlcs->count() }}
                     </div>
-                    <button onclick="window.location.href='{{ route('game.dlc', $game->slug) }}'" style="background: var(--c-surface-soft); color: var(--c-ink); font-weight: 600; font-size: 0.8rem; border: 1px solid var(--c-hairline); padding: 4px 12px; margin-left: 12px; border-radius: 0; cursor: pointer;" onmouseenter="this.style.background='var(--c-surface-elevated)';" onmouseleave="this.style.background='var(--c-surface-soft)';">SEE ALL <i class="fas fa-caret-down" style="margin-left: 4px;"></i></button>
+                    <button type="button" onclick="window.location.href='{{ route('game.dlc', $game->slug) }}'" class="game-dlc-see-all-btn">SEE ALL <i class="fas fa-caret-down"></i></button>
                 </div>
             </div>
         </div>
@@ -613,20 +910,39 @@
         <h3 style="font-size:1.2rem;font-weight:700;color:var(--c-ink);margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--c-hairline);">
             <i class="fas fa-desktop me-2" style="color:var(--c-primary);"></i>System Requirements (PC)
         </h3>
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));gap:32px;">
+        <div class="pc-requirements-grid">
             @if(isset($game->pc_requirements['minimum']))
-            <div>
-                {!! $game->pc_requirements['minimum'] !!}
+            <div class="req-column" id="req-col-minimum">
+                <div class="req-content">
+                    {!! $game->pc_requirements['minimum'] !!}
+                    <div class="req-fade"></div>
+                </div>
+                <button type="button" class="req-toggle-btn" onclick="toggleReq('minimum')">
+                    <span class="req-toggle-text">Lihat Selengkapnya</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
             </div>
             @endif
             @if(isset($game->pc_requirements['recommended']))
-            <div>
-                {!! $game->pc_requirements['recommended'] !!}
+            <div class="req-column" id="req-col-recommended">
+                <div class="req-content">
+                    {!! $game->pc_requirements['recommended'] !!}
+                    <div class="req-fade"></div>
+                </div>
+                <button type="button" class="req-toggle-btn" onclick="toggleReq('recommended')">
+                    <span class="req-toggle-text">Lihat Selengkapnya</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
             </div>
             @endif
         </div>
     </div>
     <style>
+        .pc-requirements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
         .pc-requirements strong {
             color: var(--c-ink);
             font-weight: 700;
@@ -641,6 +957,71 @@
             font-size: 0.9rem;
             margin-bottom: 8px;
             line-height: 1.6;
+        }
+        .req-column {
+            position: relative;
+        }
+        .req-fade {
+            display: none;
+        }
+        .req-toggle-btn {
+            display: none;
+        }
+
+        /* Mobile specific accordion styling */
+        @media (max-width: 768px) {
+            .pc-requirements {
+                padding: 20px 16px !important;
+            }
+            .pc-requirements-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 28px;
+            }
+            .req-content {
+                position: relative;
+                max-height: 165px;
+                overflow: hidden;
+                transition: max-height 0.35s ease;
+            }
+            .req-column.expanded .req-content {
+                max-height: 2500px;
+            }
+            .req-fade {
+                display: block;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 60px;
+                background: linear-gradient(to bottom, transparent, var(--c-surface-dark));
+                pointer-events: none;
+                transition: opacity 0.25s ease;
+            }
+            .req-column.expanded .req-fade {
+                opacity: 0;
+            }
+            .req-toggle-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                width: 100%;
+                margin-top: 10px;
+                padding: 10px 16px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid var(--c-hairline-strong);
+                color: var(--c-primary);
+                font-size: 0.88rem;
+                font-weight: 700;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+            .req-toggle-btn:hover, .req-toggle-btn:active {
+                background: rgba(118, 185, 0, 0.12);
+                border-color: var(--c-primary);
+            }
         }
     </style>
     @endif
@@ -679,20 +1060,20 @@
                     </div>
                     
                     {{-- Price Bar (Attached directly below image) --}}
-                    <div style="display:flex; align-items:center; justify-content: flex-end; height: 32px; background: #000; border-radius: 0;">
+                    <div style="display:flex; align-items:stretch; justify-content: flex-end; height: 38px; background: #000; border-radius: 0; overflow:hidden;">
                         @if($related->price == 0)
-                            <span style="color: var(--c-ink); font-size: 0.85rem; font-weight: 600; padding: 0 12px;">Free To Play</span>
+                            <span style="color: var(--c-ink); font-size: 0.85rem; font-weight: 600; padding: 0 12px; display:flex; align-items:center; white-space: nowrap;">Free To Play</span>
                         @else
                             @if($related->discount_percent > 0)
-                                <div style="display: flex; align-items: center; width: 100%; height: 100%; border-radius: 0;">
-                                    <div style="background: var(--c-primary); color: #000; font-weight: 800; font-size: 0.95rem; padding: 0 8px; height: 100%; display: flex; align-items: center; border-radius: 0;">-{{ $related->discount_percent }}%</div>
-                                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: flex-end; flex-grow: 1; background: rgba(255,255,255,0.05); height: 100%; padding-right: 12px; border-radius: 0;">
-                                        <span style="color: var(--c-mute); font-size: 0.65rem; text-decoration: line-through;">Rp {{ number_format($related->original_price ?? $related->price, 0, ',', '.') }}</span>
-                                        <span style="color: var(--c-primary); font-size: 0.85rem; font-weight: 600; line-height: 1;">Rp {{ number_format($related->price, 0, ',', '.') }}</span>
+                                <div style="display: flex; align-items: stretch; width: 100%; height: 100%; border-radius: 0;">
+                                    <div style="background: var(--c-primary); color: #000; font-weight: 800; font-size: 0.95rem; padding: 0 8px; display: flex; align-items: center; justify-content:center; white-space: nowrap; border-radius: 0;">-{{ $related->discount_percent }}%</div>
+                                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: flex-end; flex-grow: 1; background: rgba(255,255,255,0.05); padding: 0 8px; border-radius: 0; overflow: hidden;">
+                                        <div style="color: var(--c-mute); font-size: 0.65rem; text-decoration: line-through; white-space: nowrap; line-height: 1.2;">Rp {{ number_format($related->original_price ?? $related->price, 0, ',', '.') }}</div>
+                                        <div style="color: var(--c-primary); font-size: 0.85rem; font-weight: 600; white-space: nowrap; line-height: 1.2;">Rp {{ number_format($related->price, 0, ',', '.') }}</div>
                                     </div>
                                 </div>
                             @else
-                                <span style="color: var(--c-ink); font-size: 0.85rem; font-weight: 600; padding: 0 12px;">Rp {{ number_format($related->price, 0, ',', '.') }}</span>
+                                <span style="color: var(--c-ink); font-size: 0.85rem; font-weight: 600; padding: 0 12px; display:flex; align-items:center; white-space: nowrap;">Rp {{ number_format($related->price, 0, ',', '.') }}</span>
                             @endif
                         @endif
                     </div>
@@ -726,7 +1107,7 @@
     @endif
 
     {{-- Reviews Section --}}
-    <div class="card-dark" style="padding:32px;border-radius: 0;">
+    <div class="card-dark" style="padding: clamp(16px, 5vw, 32px); border-radius: 0;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--c-hairline);flex-wrap:wrap;gap:12px;">
             <h3 style="font-size:1.2rem;font-weight:700;color:var(--c-ink);margin:0;">
                 <i class="fas fa-star me-2" style="color:#f59e0b;"></i>Ulasan Pengguna
@@ -747,7 +1128,7 @@
 
         {{-- Review Form (if can review) --}}
         @if($canReview && !$userReview)
-        <div style="background:var(--c-surface-soft);border:1px solid var(--c-hairline);border-radius: 0;padding:24px;margin-bottom:28px;">
+        <div style="background:var(--c-surface-soft);border:1px solid var(--c-hairline);border-radius: 0;padding: clamp(16px, 4vw, 24px);margin-bottom:28px;">
             <h5 style="font-weight:700;color:var(--c-ink);margin-bottom:16px;font-size:1rem;"><i class="fas fa-pen me-2" style="color:var(--c-primary);"></i>Tulis Ulasanmu</h5>
             <form action="{{ route('review.store', $game->slug) }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -756,14 +1137,14 @@
                     <div id="thumb-rating" style="display:flex;gap:12px;">
                         <label style="cursor:pointer;flex:1;">
                             <input type="radio" name="rating" value="5" style="display:none;" required onchange="updateThumbSelect(this)">
-                            <div class="thumb-btn" style="background:var(--c-surface-dark);border:2px solid var(--c-hairline-strong);border-radius: 0;padding:16px;text-align:center;transition:all 0.2s;">
+                            <div class="thumb-btn" style="background:var(--c-surface-dark);border:2px solid var(--c-hairline-strong);border-radius: 0;padding: clamp(12px, 3vw, 16px);text-align:center;transition:all 0.2s;">
                                 <i class="fas fa-thumbs-up" style="font-size:2rem;color:var(--c-mute);margin-bottom:8px;transition:color 0.2s;"></i>
                                 <div style="color:var(--c-ink);font-weight:700;">Ya</div>
                             </div>
                         </label>
                         <label style="cursor:pointer;flex:1;">
                             <input type="radio" name="rating" value="1" style="display:none;" required onchange="updateThumbSelect(this)">
-                            <div class="thumb-btn" style="background:var(--c-surface-dark);border:2px solid var(--c-hairline-strong);border-radius: 0;padding:16px;text-align:center;transition:all 0.2s;">
+                            <div class="thumb-btn" style="background:var(--c-surface-dark);border:2px solid var(--c-hairline-strong);border-radius: 0;padding: clamp(12px, 3vw, 16px);text-align:center;transition:all 0.2s;">
                                 <i class="fas fa-thumbs-down" style="font-size:2rem;color:var(--c-mute);margin-bottom:8px;transition:color 0.2s;"></i>
                                 <div style="color:var(--c-ink);font-weight:700;">Tidak</div>
                             </div>
@@ -1057,12 +1438,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const dlcCartBtns = document.querySelectorAll('.add-to-cart-dlc');
     dlcCartBtns.forEach(btn => {
         btn.addEventListener('click', function() {
+            if (typeof IS_AUTHENTICATED !== 'undefined' && !IS_AUTHENTICATED) {
+                if (typeof showLoginRequiredPopup === 'function') showLoginRequiredPopup('keranjang');
+                return;
+            }
             const slug = this.dataset.gameSlug;
             fetch(`/cart/${slug}`, {
                 method: 'POST',
                 headers: {'Content-Type':'application/json','X-CSRF-TOKEN':csrfToken,'Accept':'application/json'},
                 body: JSON.stringify({_token: csrfToken})
-            }).then(r=>r.json()).then(data => {
+            }).then(r => {
+                if (r.status === 401) {
+                    if (typeof showLoginRequiredPopup === 'function') showLoginRequiredPopup('keranjang');
+                    throw new Error('Unauthenticated');
+                }
+                return r.json();
+            }).then(data => {
                 if (data.error) { if (typeof showCenterPopup==='function') showCenterPopup(data.error, false); return; }
                 if (data.in_cart) {
                     this.innerHTML = `<i class="fas fa-check"></i>`;
@@ -1079,13 +1470,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const wishBtn = document.getElementById('add-to-wishlist-btn');
     if (wishBtn) {
         wishBtn.addEventListener('click', function() {
+            if (typeof IS_AUTHENTICATED !== 'undefined' && !IS_AUTHENTICATED) {
+                if (typeof showLoginRequiredPopup === 'function') showLoginRequiredPopup('wishlist');
+                return;
+            }
             const slug = this.dataset.gameSlug;
             const icon = this.querySelector('i');
             fetch(`/wishlist/${slug}`, {
                 method: 'POST',
                 headers: {'Content-Type':'application/json','X-CSRF-TOKEN':csrfToken,'Accept':'application/json'},
                 body: JSON.stringify({_token: csrfToken})
-            }).then(r=>r.json()).then(data => {
+            }).then(r => {
+                if (r.status === 401) {
+                    if (typeof showLoginRequiredPopup === 'function') showLoginRequiredPopup('wishlist');
+                    throw new Error('Unauthenticated');
+                }
+                return r.json();
+            }).then(data => {
                 if (data.error) { 
                     if (typeof showCenterPopup==='function') showCenterPopup(data.error, false); 
                     return; 
@@ -1110,7 +1511,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (typeof updateBadge==='function') updateBadge('wishlist-count', data.count);
             }).catch(err=>{
                 console.error('Wishlist error:', err);
-                if (typeof showCenterPopup==='function') showCenterPopup('Terjadi kesalahan', false);
+                if (err.message !== 'Unauthenticated' && typeof showCenterPopup==='function') {
+                    showCenterPopup('Terjadi kesalahan', false);
+                }
             });
         });
     }
@@ -1118,13 +1521,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Helper for Bundle/Add all DLCs
 function addAllToCart(gameSlug) {
-    if (typeof showCenterPopup === 'function') {
-        showCenterPopup('Menambahkan bundle ke keranjang...', true);
+    if (typeof IS_AUTHENTICATED !== 'undefined' && !IS_AUTHENTICATED) {
+        if (typeof showLoginRequiredPopup === 'function') showLoginRequiredPopup('keranjang');
+        return;
     }
     fetch(`/cart/${gameSlug}/bundle`, {
         method: 'POST',
         headers: {'Content-Type':'application/json','X-CSRF-TOKEN':document.querySelector('meta[name="csrf-token"]').content,'Accept':'application/json'},
-    }).then(r=>r.json()).then(data => {
+    }).then(r => {
+        if (r.status === 401) {
+            if (typeof showLoginRequiredPopup === 'function') showLoginRequiredPopup('keranjang');
+            throw new Error('Unauthenticated');
+        }
+        return r.json();
+    }).then(data => {
         if (data.error) {
             if (typeof showCenterPopup === 'function') showCenterPopup(data.error, false);
             return;
@@ -1133,14 +1543,20 @@ function addAllToCart(gameSlug) {
         if (typeof updateBadge === 'function') updateBadge('cart-count', data.count);
         
         // Refresh page after a short delay to reflect UI changes (Cart buttons)
-        setTimeout(() => window.location.reload(), 1000);
+        setTimeout(() => window.location.reload(), 1500);
     }).catch(e => {
         console.error(e);
-        if (typeof showCenterPopup === 'function') showCenterPopup('Terjadi kesalahan', false);
+        if (e.message !== 'Unauthenticated' && typeof showCenterPopup === 'function') {
+            showCenterPopup('Terjadi kesalahan', false);
+        }
     });
 }
 
 function claimFreeGame(gameSlug) {
+    if (typeof IS_AUTHENTICATED !== 'undefined' && !IS_AUTHENTICATED) {
+        if (typeof showLoginRequiredPopup === 'function') showLoginRequiredPopup('klaim game gratis');
+        return;
+    }
     fetch(`/library/${gameSlug}/claim`, {
         method: 'POST',
         headers: {
@@ -1150,7 +1566,13 @@ function claimFreeGame(gameSlug) {
         },
         body: JSON.stringify({})
     })
-    .then(response => response.json())
+    .then(r => {
+        if (r.status === 401) {
+            if (typeof showLoginRequiredPopup === 'function') showLoginRequiredPopup('klaim game gratis');
+            throw new Error('Unauthenticated');
+        }
+        return r.json();
+    })
     .then(data => {
         if(data.success) {
             if (typeof showCenterPopup === 'function') {
@@ -1165,9 +1587,48 @@ function claimFreeGame(gameSlug) {
     })
     .catch(error => {
         console.error('Error:', error);
-        if (typeof showCenterPopup === 'function') showCenterPopup('Terjadi kesalahan saat menambahkan game.', false);
+        if (error.message !== 'Unauthenticated' && typeof showCenterPopup === 'function') {
+            showCenterPopup('Terjadi kesalahan saat menambahkan game.', false);
+        }
     });
 }
+
+function toggleReq(type) {
+    const col = document.getElementById('req-col-' + type);
+    if (!col) return;
+    
+    const isExpanded = col.classList.toggle('expanded');
+    const textEl = col.querySelector('.req-toggle-text');
+    const iconEl = col.querySelector('.req-toggle-btn i');
+    
+    if (isExpanded) {
+        if (textEl) textEl.textContent = 'Sembunyikan';
+        if (iconEl) iconEl.className = 'fas fa-chevron-up';
+    } else {
+        if (textEl) textEl.textContent = 'Lihat Selengkapnya';
+        if (iconEl) iconEl.className = 'fas fa-chevron-down';
+        
+        // Scroll slightly if user scrolled far past it
+        col.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    ['minimum', 'recommended'].forEach(function(type) {
+        const col = document.getElementById('req-col-' + type);
+        if (col) {
+            const content = col.querySelector('.req-content');
+            const btn = col.querySelector('.req-toggle-btn');
+            const fade = col.querySelector('.req-fade');
+            // If on mobile and content is already short, no need to show toggle button
+            if (content && btn && content.scrollHeight <= 180) {
+                btn.style.display = 'none';
+                if (fade) fade.style.display = 'none';
+                content.style.maxHeight = 'none';
+            }
+        }
+    });
+});
 </script>
 
 @include('game.partials.review_media')

@@ -1,133 +1,433 @@
 @extends('layouts.app')
 
-@section('title', 'Kategori & Eksplorasi - GameVault')
+@section('title', 'Kategori & Eksplorasi — GameVault')
 
 @section('content')
 <style>
-    * {
-        scroll-behavior: smooth !important;
+    /* ════ CATEGORIES RESPONSIVE SYSTEM (Sharp Box Gaming Style) ════ */
+    .category-page-container {
+        padding-top: 32px;
+        padding-bottom: 64px;
+        width: 100%;
+        max-width: 1380px;
+        margin: 0 auto;
+        padding-left: 24px;
+        padding-right: 24px;
     }
-    
-    html {
-        scroll-behavior: smooth !important;
+
+    .cat-top-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 12px;
     }
-    
-    body {
-        scroll-behavior: smooth !important;
+    .cat-page-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        margin: 0;
+        color: var(--c-ink);
+        letter-spacing: 0.5px;
     }
-    
-    @media (prefers-reduced-motion: no-preference) {
-        :root {
-            scroll-behavior: smooth !important;
-        }
+
+    /* Mobile Quick Genre Scroll Bar */
+    .cat-mobile-quick-bar {
+        display: none;
+        gap: 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 12px;
+        margin-bottom: 16px;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
     }
-    
-    .custom-scroll::-webkit-scrollbar {
-        width: 6px;
+    .cat-mobile-quick-bar::-webkit-scrollbar {
+        display: none;
     }
-    .custom-scroll::-webkit-scrollbar-track {
-        background: transparent;
+    .cat-quick-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        background: var(--c-surface-soft);
+        border: 1px solid var(--c-hairline);
+        color: var(--c-mute);
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-decoration: none;
+        border-radius: 0;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
     }
-    .custom-scroll::-webkit-scrollbar-thumb {
+    .cat-quick-chip.active {
+        background: rgba(118, 185, 0, 0.15);
+        border-color: var(--c-primary);
+        color: var(--c-primary);
+    }
+
+    /* Main 2-Col Layout */
+    .category-main-flex {
+        display: flex;
+        gap: 32px;
+        align-items: flex-start;
+    }
+
+    /* Filter Modal Overlay (Mobile) */
+    .filter-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.75);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+    }
+    .filter-modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Sidebar Filter (Desktop) */
+    .sidebar-filter {
+        width: 280px;
+        flex-shrink: 0;
+        background: var(--c-surface-dark);
+        border: 1px solid var(--c-hairline);
+        border-radius: 0;
+        padding: 20px;
+        position: sticky;
+        top: 90px;
+        max-height: calc(100vh - 120px);
+        overflow-y: auto;
+    }
+    .sidebar-filter::-webkit-scrollbar {
+        width: 5px;
+    }
+    .sidebar-filter::-webkit-scrollbar-thumb {
         background: var(--c-hairline-strong);
         border-radius: 0;
     }
-    .custom-scroll::-webkit-scrollbar-thumb:hover {
-        background: var(--c-primary);
+
+    .filter-header-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--c-hairline);
     }
-    
-    .mobile-only { display: none !important; }
+    .filter-title {
+        font-size: 1rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--c-ink);
+        margin: 0;
+    }
+    .filter-reset-btn {
+        background: none;
+        border: none;
+        color: var(--c-primary);
+        font-size: 12.5px;
+        font-weight: 700;
+        cursor: pointer;
+        padding: 4px 6px;
+    }
+    .filter-reset-btn:hover {
+        text-decoration: underline;
+    }
+
+    .filter-search-box {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    .filter-search-box i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--c-mute);
+        font-size: 13px;
+    }
+    .filter-search-input {
+        width: 100%;
+        padding: 9px 12px 9px 34px;
+        background: var(--c-surface-elevated);
+        border: 1px solid var(--c-hairline-strong);
+        border-radius: 0;
+        color: var(--c-ink);
+        font-size: 13.5px;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    .filter-search-input:focus {
+        border-color: var(--c-primary);
+    }
+
+    .filter-section-title {
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+        margin: 0 0 10px 0;
+        color: var(--c-primary);
+        letter-spacing: 0.5px;
+    }
+    .filter-checkbox-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .filter-check-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--c-body);
+        user-select: none;
+        transition: color 0.15s;
+    }
+    .filter-check-item:hover {
+        color: var(--c-ink);
+    }
+    .filter-check-item input[type="checkbox"] {
+        accent-color: var(--c-primary);
+        width: 16px;
+        height: 16px;
+        border-radius: 0;
+        cursor: pointer;
+    }
+
+    /* Mobile Drawer Specifics */
+    .sidebar-mobile-drawer-close {
+        display: none;
+    }
+    .sidebar-mobile-bottom-actions {
+        display: none;
+    }
+
+    /* ════ MOBILE RESPONSIVE ADAPTATIONS (<= 768px) ════ */
     @media (max-width: 768px) {
-        .mobile-only { display: block !important; }
-        .desktop-only { display: none !important; }
-        .category-main-flex { gap: 0 !important; }
-        .category-main-container { padding-left: 16px !important; padding-right: 16px !important; }
-    }
-    
-    /* Filter Modal styles via Sidebar */
-    .filter-modal-overlay {
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0,0,0,0.7); z-index: 1000;
-        opacity: 0; pointer-events: none; transition: opacity 0.3s;
-    }
-    .filter-modal-overlay.active { opacity: 1; pointer-events: auto; }
-    
-    @media (max-width: 768px) {
-        .sidebar-filter {
-            position: fixed !important; bottom: -100% !important; left: 0 !important; right: 0 !important; top: auto !important;
-            width: 100% !important; background: var(--c-surface-elevated) !important; z-index: 1001 !important;
-            border-top-left-radius: 24px !important; border-top-right-radius: 24px !important;
-            padding: 24px !important; transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            max-height: 85vh !important; overflow-y: auto !important;
+        .category-page-container {
+            padding-top: 14px;
+            padding-bottom: 48px;
+            padding-left: 12px !important;
+            padding-right: 12px !important;
         }
-        .sidebar-filter.active { bottom: 0 !important; }
-        .sidebar-filter-close { display: block !important; }
+
+        .cat-top-header {
+            margin-bottom: 12px;
+        }
+        .cat-page-title {
+            font-size: 1.25rem;
+        }
+
+        .cat-mobile-quick-bar {
+            display: flex;
+        }
+
+        .category-main-flex {
+            gap: 0;
+        }
+
+        /* Mobile Filter Button (Sharp Gaming Look) */
+        .mobile-filter-trigger-btn {
+            padding: 8px 16px;
+            background: var(--c-primary);
+            color: #000;
+            border: none;
+            border-radius: 0;
+            font-weight: 800;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            box-shadow: 0 2px 10px rgba(118,185,0,0.3);
+        }
+
+        /* Mobile Bottom Drawer (Sharp Box Style) */
+        .sidebar-filter {
+            position: fixed !important;
+            bottom: -100% !important;
+            left: 0 !important;
+            right: 0 !important;
+            top: auto !important;
+            width: 100% !important;
+            background: var(--c-surface-elevated) !important;
+            border: none !important;
+            border-top: 2px solid var(--c-primary) !important;
+            border-radius: 0 !important;
+            z-index: 1001 !important;
+            padding: 18px 16px 20px !important;
+            transition: bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            max-height: 82vh !important;
+            overflow-y: auto !important;
+            box-shadow: 0 -8px 30px rgba(0,0,0,0.8);
+        }
+        .sidebar-filter.active {
+            bottom: 0 !important;
+        }
+
+        .sidebar-mobile-drawer-close {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--c-hairline);
+        }
+        .sidebar-mobile-drawer-title {
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .sidebar-mobile-close-btn {
+            background: none;
+            border: none;
+            color: var(--c-mute);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        /* Sticky bottom action inside drawer */
+        .sidebar-mobile-bottom-actions {
+            display: flex;
+            position: sticky;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            background: var(--c-surface-elevated);
+            padding: 12px 0 0 0;
+            margin-top: 20px;
+            border-top: 1px solid var(--c-hairline);
+            gap: 10px;
+            z-index: 10;
+        }
+        .sidebar-apply-btn {
+            flex: 1;
+            padding: 11px;
+            background: var(--c-primary);
+            color: #000;
+            font-weight: 800;
+            font-size: 13.5px;
+            border: none;
+            border-radius: 0;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        .sidebar-clear-btn {
+            padding: 11px 16px;
+            background: var(--c-surface-dark);
+            color: var(--c-mute);
+            border: 1px solid var(--c-hairline);
+            border-radius: 0;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+        }
     }
-    .sidebar-filter-close { display: none; margin-bottom: 24px; text-align: right; }
 </style>
 
-<!-- Overlay for mobile filter -->
+<!-- Mobile Filter Modal Overlay -->
 <div class="filter-modal-overlay" onclick="closeMobileFilter()"></div>
 
-<div class="category-main-container" style="padding-top:40px; padding-bottom:64px; width:100%; padding-left:4%; padding-right:4%;">
+<div class="category-page-container">
     
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
-        <h2 class="t-heading-lg">Eksplorasi <span class="text-green">Katalog</span></h2>
-        <button class="mobile-only btn btn-primary" onclick="openMobileFilter()" style="padding: 8px 16px; border-radius: 8px; font-weight: bold;">
-            <i class="fas fa-filter"></i> Filter
+    {{-- Header --}}
+    <div class="cat-top-header">
+        <h2 class="cat-page-title">Eksplorasi <span style="color: var(--c-primary);">Katalog</span></h2>
+        
+        <button type="button" class="mobile-filter-trigger-btn mobile-only" onclick="openMobileFilter()">
+            <i class="fas fa-filter"></i>
+            <span>Filter Kategori</span>
+            @if(count($genreDipilih) > 0 || count($hargaDipilih) > 0)
+                <span style="background:#000; color:var(--c-primary); font-size:10px; padding:1px 5px; font-weight:800;">{{ count($genreDipilih) + count($hargaDipilih) }}</span>
+            @endif
         </button>
     </div>
 
-    <div class="category-main-flex" style="display:flex; gap:40px; align-items:flex-start;">
+    {{-- Mobile Quick Genres Scroll Bar --}}
+    @php
+        $popularGenres = ['Aksi', 'RPG', 'Petualangan', 'Strategi', 'Simulasi', 'Open World', 'Shooter'];
+    @endphp
+    <div class="cat-mobile-quick-bar">
+        <a href="javascript:void(0)" onclick="quickFilterGenre('all')" class="cat-quick-chip {{ empty($genreDipilih) ? 'active' : '' }}">
+            <i class="fas fa-layer-group"></i> Semua
+        </a>
+        @foreach($popularGenres as $pg)
+            <a href="javascript:void(0)" onclick="quickFilterGenre('{{ $pg }}')" class="cat-quick-chip {{ in_array($pg, $genreDipilih) ? 'active' : '' }}">
+                {{ $pg }}
+            </a>
+        @endforeach
+    </div>
+
+    <div class="category-main-flex">
         
-        {{-- SIDEBAR FILTER --}}
-        <aside class="sidebar-filter custom-scroll" style="width:300px; flex-shrink:0; padding-right:16px; position:sticky; top:100px; max-height:calc(100vh - 140px); overflow-y:auto;">
+        {{-- SIDEBAR FILTER (Desktop Sticky, Mobile Bottom Drawer) --}}
+        <aside class="sidebar-filter">
             
-            <div class="sidebar-filter-close">
-                <button onclick="closeMobileFilter()" style="background:none; border:none; color:var(--c-ink); font-size:24px; cursor:pointer;">&times;</button>
+            {{-- Mobile Drawer Header --}}
+            <div class="sidebar-mobile-drawer-close">
+                <div class="sidebar-mobile-drawer-title">
+                    <i class="fas fa-sliders" style="color: var(--c-primary);"></i> Filter Game
+                </div>
+                <button type="button" class="sidebar-mobile-close-btn" onclick="closeMobileFilter()" title="Tutup">&times;</button>
             </div>
 
-            <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:16px;">
-                <h3 style="font-size:18px; font-weight:700;">Filter</h3>
-                <button onclick="resetFilters()" style="background:none; border:none; color:var(--c-primary); font-size:13px; font-weight:600; cursor:pointer;">Reset</button>
+            <div class="filter-header-bar desktop-only">
+                <h3 class="filter-title">Filter</h3>
+                <button type="button" onclick="resetFilters()" class="filter-reset-btn">Reset</button>
             </div>
 
-            <div style="position:relative; margin-bottom:24px;">
-                <i class="fas fa-search" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--c-body);"></i>
-                <input type="text" id="kategoriSearchInput" onkeyup="filterByTitle()" placeholder="Cari genre..."
-                    style="width:100%; padding:10px 12px 10px 36px; background:var(--c-surface-elevated); border:1px solid var(--c-hairline-strong); border-radius: 0; color:var(--c-ink); font-size:14px; outline:none;">
+            {{-- Live Search Genre --}}
+            <div class="filter-search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="kategoriSearchInput" onkeyup="filterByTitle()" placeholder="Cari genre..." class="filter-search-input">
             </div>
 
-            {{-- GENRE --}}
-            <div style="margin-bottom:28px;">
-                <h4 style="font-size:14px; font-weight:700; margin-bottom:12px; color:var(--c-body);">Genre</h4>
-                <div style="display:flex; flex-direction:column; gap:10px;">
-                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13px; color:var(--c-ink);">
-                        <input type="checkbox" id="semuaGenre" {{ empty($genreDipilih) ? 'checked' : '' }} onchange="toggleSemuaGenre(this)" style="accent-color:var(--c-primary); width:16px; height:16px;">
-                        <strong>Semua Genre</strong>
+            {{-- 1. GENRE FILTER --}}
+            <div style="margin-bottom: 22px;">
+                <h4 class="filter-section-title">Genre</h4>
+                <div class="filter-checkbox-list">
+                    <label class="filter-check-item">
+                        <input type="checkbox" id="semuaGenre" {{ empty($genreDipilih) ? 'checked' : '' }} onchange="toggleSemuaGenre(this)">
+                        <strong style="color: var(--c-ink);">Semua Genre</strong>
                     </label>
 
                     @foreach($allGenres as $g)
-                    <label class="genre-item" style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13px; color:var(--c-body); transition:color 0.2s;" onmouseenter="this.style.color='var(--c-ink)'" onmouseleave="this.style.color='var(--c-body)'">
-                        <input type="checkbox" name="genre" value="{{ $g }}" {{ in_array($g, $genreDipilih) ? 'checked' : '' }} onchange="applyFilters()" style="accent-color:var(--c-primary); width:16px; height:16px;">
+                    <label class="filter-check-item genre-item">
+                        <input type="checkbox" name="genre" value="{{ $g }}" {{ in_array($g, $genreDipilih) ? 'checked' : '' }} onchange="applyFilters()">
                         <span class="genre-label">{{ $g }}</span>
                     </label>
                     @endforeach
                 </div>
             </div>
 
-            {{-- HARGA --}}
-            <div style="margin-bottom:28px;">
-                <h4 style="font-size:14px; font-weight:700; margin-bottom:12px; color:var(--c-body);">Harga</h4>
-                <div style="display:flex; flex-direction:column; gap:10px;">
-                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13px; color:var(--c-ink);">
-                        <input type="checkbox" id="semuaHarga" {{ empty($hargaDipilih) ? 'checked' : '' }} onchange="toggleSemuaHarga(this)" style="accent-color:var(--c-primary); width:16px; height:16px;">
-                        <strong>Semua Harga</strong>
+            {{-- 2. HARGA FILTER --}}
+            <div style="margin-bottom: 20px;">
+                <h4 class="filter-section-title">Harga</h4>
+                <div class="filter-checkbox-list">
+                    <label class="filter-check-item">
+                        <input type="checkbox" id="semuaHarga" {{ empty($hargaDipilih) ? 'checked' : '' }} onchange="toggleSemuaHarga(this)">
+                        <strong style="color: var(--c-ink);">Semua Harga</strong>
                     </label>
 
                     @php
                     $hargaOptions = [
-                        'gratis' => 'Gratis',
+                        'gratis' => 'Gratis (Free)',
                         '<100'=> 'Di bawah Rp 100.000',
                         '100-250' => 'Rp 100.000 - Rp 250.000',
                         '250-500' => 'Rp 250.000 - Rp 500.000',
@@ -135,20 +435,26 @@
                     ];
                     @endphp
                     @foreach($hargaOptions as $val => $label)
-                    <label style="display:flex; align-items:center; gap:10px; cursor:pointer; font-size:13px; color:var(--c-body); transition:color 0.2s;" onmouseenter="this.style.color='var(--c-ink)'" onmouseleave="this.style.color='var(--c-body)'">
-                        <input type="checkbox" name="harga" value="{{ $val }}" {{ in_array($val, $hargaDipilih) ? 'checked' : '' }} onchange="applyFilters()" style="accent-color:var(--c-primary); width:16px; height:16px;">
+                    <label class="filter-check-item">
+                        <input type="checkbox" name="harga" value="{{ $val }}" {{ in_array($val, $hargaDipilih) ? 'checked' : '' }} onchange="applyFilters()">
                         <span>{{ $label }}</span>
                     </label>
                     @endforeach
                 </div>
             </div>
 
+            {{-- Mobile Drawer Bottom Buttons --}}
+            <div class="sidebar-mobile-bottom-actions">
+                <button type="button" class="sidebar-clear-btn" onclick="resetFilters()">Reset</button>
+                <button type="button" class="sidebar-apply-btn" onclick="closeMobileFilter()">Terapkan Filter</button>
+            </div>
+
         </aside>
 
         {{-- MAIN CONTENT --}}
-        <div style="flex:1; width:100%;">
-            <div style="margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;">
-                <p style="font-size:14px; color:var(--c-body);"><strong style="color:var(--c-ink);" id="gameCountText">{{ $games->total() }}</strong> Game ditemukan</p>
+        <div style="flex:1; width:100%; min-width:0;">
+            <div style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; font-size:13.5px; color:var(--c-mute);">
+                <p style="margin:0;"><strong style="color:var(--c-primary);" id="gameCountText">{{ $games->total() }}</strong> Game ditemukan</p>
             </div>
 
             <div id="category-grid-container" style="transition:opacity 0.2s;">
@@ -188,7 +494,7 @@
             document.querySelectorAll('input[name="genre"]').forEach(cb => cb.checked = false);
             applyFilters();
         } else {
-            checkbox.checked = true; // Prevent unchecking if no others are selected
+            checkbox.checked = true;
         }
     }
 
@@ -208,26 +514,35 @@
         applyFilters();
     }
 
+    function quickFilterGenre(genre) {
+        document.querySelectorAll('input[name="genre"]').forEach(cb => cb.checked = false);
+        if (genre !== 'all') {
+            const target = document.querySelector(`input[name="genre"][value="${genre}"]`);
+            if (target) target.checked = true;
+            document.getElementById('semuaGenre').checked = false;
+        } else {
+            document.getElementById('semuaGenre').checked = true;
+        }
+        applyFilters();
+    }
+
     function updateUrlAndFetch() {
         let selectedGenres = Array.from(document.querySelectorAll('input[name="genre"]:checked')).map(cb => cb.value);
         let selectedPrices = Array.from(document.querySelectorAll('input[name="harga"]:checked')).map(cb => cb.value);
 
-        // Update 'Semua' checkboxes visual state
         document.getElementById('semuaGenre').checked = selectedGenres.length === 0;
         document.getElementById('semuaHarga').checked = selectedPrices.length === 0;
 
-        // Build URL
         let url = new URL(window.location.href);
         url.searchParams.delete('genre[]');
         url.searchParams.delete('harga[]');
-        url.searchParams.delete('page'); // Reset to page 1 on filter change
+        url.searchParams.delete('page');
 
         selectedGenres.forEach(g => url.searchParams.append('genre[]', g));
         selectedPrices.forEach(p => url.searchParams.append('harga[]', p));
 
         window.history.pushState({}, '', url);
 
-        // Fetch new data
         let container = document.getElementById('category-grid-container');
         container.style.opacity = '0.4';
         container.style.pointerEvents = 'none';
@@ -240,6 +555,17 @@
             container.innerHTML = html;
             container.style.opacity = '1';
             container.style.pointerEvents = 'auto';
+
+            // Also update quick bar active state
+            document.querySelectorAll('.cat-quick-chip').forEach(chip => chip.classList.remove('active'));
+            if (selectedGenres.length === 0) {
+                const allChip = document.querySelector('.cat-quick-chip');
+                if (allChip) allChip.classList.add('active');
+            } else if (selectedGenres.length === 1) {
+                document.querySelectorAll('.cat-quick-chip').forEach(chip => {
+                    if (chip.innerText.trim() === selectedGenres[0]) chip.classList.add('active');
+                });
+            }
         })
         .catch(err => {
             window.location.reload();
@@ -251,8 +577,8 @@
         filterTimeout = setTimeout(updateUrlAndFetch, 300);
     }
 
-    // Smooth Scroll Function (Manual Implementation for Better Control)
-    function smoothScrollToTop(duration = 800) {
+    // Smooth Scroll to Top helper
+    function smoothScrollToTop(duration = 600) {
         const start = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
         const startTime = performance.now();
 
@@ -260,15 +586,9 @@
             const currentTime = performance.now();
             const elapsed = currentTime - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            
-            // Easing function (easeInOutCubic) untuk smooth animation
-            const easeProgress = progress < 0.5
-                ? 4 * progress * progress * progress
-                : 1 - Math.pow(-2 * progress + 2, 3) / 2;
-            
+            const easeProgress = progress < 0.5 ? 4 * progress * progress * progress : 1 - Math.pow(-2 * progress + 2, 3) / 2;
             const position = start * (1 - easeProgress);
             
-            // Force scroll to both window and document
             window.scrollTo(0, position);
             document.documentElement.scrollTop = position;
             document.body.scrollTop = position;
@@ -276,13 +596,9 @@
             if (progress < 1) {
                 requestAnimationFrame(scroll);
             } else {
-                // Ensure we're at absolute top
                 window.scrollTo(0, 0);
-                document.documentElement.scrollTop = 0;
-                document.body.scrollTop = 0;
             }
         }
-        
         requestAnimationFrame(scroll);
     }
 
@@ -293,30 +609,15 @@
             e.preventDefault();
             let container = document.getElementById('category-grid-container');
             let paginationContainer = document.getElementById('pagination-container');
+            if (!container || container.style.pointerEvents === 'none') return;
             
-            // Prevent re-clicking while loading
-            if (container.style.pointerEvents === 'none') return;
-            
-            // Disable pointer events immediately
             container.style.pointerEvents = 'none';
-            if (paginationContainer) {
-                paginationContainer.style.pointerEvents = 'none';
-            }
+            if (paginationContainer) paginationContainer.style.pointerEvents = 'none';
             
-            // Log current scroll position for debugging
-            console.log('Current scroll:', window.pageYOffset);
+            smoothScrollToTop(600);
             
-            // Start smooth scroll animation to top (800ms duration for more visible animation)
-            smoothScrollToTop(800);
-            
-            // Wait for scroll animation to complete, then load content
             setTimeout(() => {
-                console.log('After scroll:', window.pageYOffset);
-                
-                // Add fade effect
-                if (paginationContainer) {
-                    paginationContainer.style.opacity = '0.4';
-                }
+                if (paginationContainer) paginationContainer.style.opacity = '0.4';
                 container.style.opacity = '0.4';
 
                 fetch(pageLink.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
@@ -328,7 +629,7 @@
                         window.history.pushState({}, '', pageLink.href);
                     })
                     .catch(() => window.location.href = pageLink.href);
-            }, 850); // Wait 850ms (scroll duration + 50ms buffer)
+            }, 650);
         }
     });
 </script>

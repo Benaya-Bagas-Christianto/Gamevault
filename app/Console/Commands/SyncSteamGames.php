@@ -32,17 +32,28 @@ class SyncSteamGames extends Command
 
     public function handle()
     {
-        $this->info('Starting Steam API Sync...');
+        $this->info('Starting Steam API Sync (Resumable)...');
+
+        // Fetch top games from SteamSpy
+        $this->info('Fetching top games from SteamSpy...');
+        $topGames = Http::get('https://steamspy.com/api.php?request=top100in2weeks')->json();
+        $ownedGames = Http::get('https://steamspy.com/api.php?request=top100owned')->json();
         
-        Game::query()->delete();
-        $this->info('Cleared old games.');
+        $appIds = array_keys($topGames);
+        $appIds = array_unique(array_merge($appIds, array_keys($ownedGames)));
 
-        $totalGames = 0;
-        $targetGames = 100;
+        // Count existing games so we don't fetch more than target total
+        $totalGames = Game::where('type', 'game')->count();
+        $targetGames = 150;
 
-        foreach ($this->appIds as $appId) {
+        foreach ($appIds as $appId) {
             if ($totalGames >= $targetGames) {
                 break;
+            }
+
+            if (Game::where('steam_appid', $appId)->exists()) {
+                $this->info("Game {$appId} already exists. Skipping.");
+                continue;
             }
 
             $this->info("Fetching Game AppID: {$appId}");
@@ -54,14 +65,20 @@ class SyncSteamGames extends Command
                 
                 if (isset($gameModel->steam_dlc_ids)) {
                     $dlcIds = $gameModel->steam_dlc_ids;
+                    // Limit to max 5 DLCs to save time
+                    $dlcIds = array_slice($dlcIds, 0, 5);
                     foreach ($dlcIds as $dlcId) {
-                        $this->info("   -> Fetching DLC/Music AppID: {$dlcId}");
-                        $this->fetchAndSaveApp($dlcId, 'dlc', $gameModel->id);
-                        sleep(1);
+                        if (!Game::where('steam_appid', $dlcId)->exists()) {
+                            $this->info("   -> Fetching DLC AppID: {$dlcId}");
+                            $this->fetchAndSaveApp($dlcId, 'dlc', $gameModel->id);
+                            usleep(500000); // 0.5s sleep
+                        } else {
+                             $this->info("   -> DLC {$dlcId} already exists.");
+                        }
                     }
                 }
             }
-            sleep(1);
+            usleep(500000); // 0.5s sleep
         }
 
         $this->info("Sync Complete! Total Main Games: $totalGames");
@@ -186,6 +203,7 @@ class SyncSteamGames extends Command
                     'is_active' => true,
                     'type' => $type,
                     'parent_id' => $parentId,
+                    'steam_appid' => $appId,
                     'pc_requirements' => $pcRequirements,
                     'packages' => $packages,
                 ]

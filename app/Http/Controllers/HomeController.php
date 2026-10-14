@@ -34,9 +34,10 @@ class HomeController extends Controller
             ->take(12)
             ->get();
 
-        // New Releases
-        $newGames = Game::active()->where('type', 'game')
-            ->latest()
+        // Discounted Games (Special Offers)
+        $discountGames = Game::active()->where('type', 'game')
+            ->where('discount_percent', '>', 0)
+            ->orderByDesc('discount_percent')
             ->take(12)
             ->get();
 
@@ -62,7 +63,7 @@ class HomeController extends Controller
             'heroGames',
             'trendingGames',
             'popularGames',
-            'newGames',
+            'discountGames',
             'freeGames',
             'wishlistIds',
             'cartIds',
@@ -123,7 +124,7 @@ class HomeController extends Controller
         if ($userAgent = $request->header('User-Agent')) {
             $isMobile = preg_match('/Mobile|Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i', $userAgent);
         }
-        $perPage = $isMobile ? 5 : 15;
+        $perPage = $isMobile ? 10 : 15;
 
         $games = $query->paginate($perPage)->onEachSide($isMobile ? 1 : 3)->withQueryString();
 
@@ -178,7 +179,14 @@ class HomeController extends Controller
             });
         }
 
-        $games = $query->paginate(24)->withQueryString();
+        // Detect mobile for specific pagination limit
+        $isMobile = false;
+        if ($userAgent = $request->header('User-Agent')) {
+            $isMobile = preg_match('/Mobile|Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile/i', $userAgent);
+        }
+        $perPage = $isMobile ? 10 : 25;
+
+        $games = $query->paginate($perPage)->onEachSide($isMobile ? 1 : 3)->withQueryString();
 
         $allGenres = Game::active()->pluck('genre')->flatten()->unique()->sort()->values();
 

@@ -25,35 +25,30 @@
             }
         </style>
 
-        {{-- Pagination Elements (Desktop) --}}
-        @foreach ($elements as $element)
-            {{-- "Three Dots" Separator --}}
-            @if (is_string($element))
-                <span class="pagination-desktop" aria-disabled="true" 
-                    style="align-items:center;justify-content:center;width:48px;height:48px;color:var(--c-mute);font-weight:700;">
-                    {{ $element }}
+        {{-- Pagination Elements (Desktop - Custom 10 item sliding window) --}}
+        @php
+            $startDesktop = max(1, $paginator->currentPage() - 4);
+            $endDesktop = min($paginator->lastPage(), $startDesktop + 9);
+            
+            if ($endDesktop - $startDesktop < 9 && $paginator->lastPage() >= 10) {
+                $startDesktop = max(1, $endDesktop - 9);
+            }
+        @endphp
+        @for ($i = $startDesktop; $i <= $endDesktop; $i++)
+            @if ($i == $paginator->currentPage())
+                <span class="pagination-desktop" aria-current="page" 
+                    style="align-items:center;justify-content:center;width:48px;height:48px;border:2px solid var(--c-primary);background:var(--c-primary);color:#000;border-radius: 0;font-weight:800;font-size:16px;box-shadow:0 4px 12px rgba(118,185,0,0.3);">
+                    {{ $i }}
                 </span>
+            @else
+                <a href="{{ $paginator->url($i) }}" class="pagination-desktop" aria-label="Go to page {{ $i }}"
+                    style="align-items:center;justify-content:center;width:48px;height:48px;border:1px solid var(--c-hairline);background:var(--c-surface-soft);color:var(--c-ink);border-radius: 0;cursor:pointer;text-decoration:none;transition:all 0.2s;font-weight:600;font-size:16px;"
+                    onmouseenter="this.style.borderColor='var(--c-primary)';this.style.background='rgba(118,185,0,0.1)';this.style.color='var(--c-primary)';"
+                    onmouseleave="this.style.borderColor='var(--c-hairline)';this.style.background='var(--c-surface-soft)';this.style.color='var(--c-ink)';">
+                    {{ $i }}
+                </a>
             @endif
-
-            {{-- Array Of Links --}}
-            @if (is_array($element))
-                @foreach ($element as $page => $url)
-                    @if ($page == $paginator->currentPage())
-                        <span class="pagination-desktop" aria-current="page" 
-                            style="align-items:center;justify-content:center;width:48px;height:48px;border:2px solid var(--c-primary);background:var(--c-primary);color:#000;border-radius: 0;font-weight:800;font-size:16px;box-shadow:0 4px 12px rgba(118,185,0,0.3);">
-                            {{ $page }}
-                        </span>
-                    @else
-                        <a href="{{ $url }}" class="pagination-desktop" aria-label="Go to page {{ $page }}"
-                            style="align-items:center;justify-content:center;width:48px;height:48px;border:1px solid var(--c-hairline);background:var(--c-surface-soft);color:var(--c-ink);border-radius: 0;cursor:pointer;text-decoration:none;transition:all 0.2s;font-weight:600;font-size:16px;"
-                            onmouseenter="this.style.borderColor='var(--c-primary)';this.style.background='rgba(118,185,0,0.1)';this.style.color='var(--c-primary)';"
-                            onmouseleave="this.style.borderColor='var(--c-hairline)';this.style.background='var(--c-surface-soft)';this.style.color='var(--c-ink)';">
-                            {{ $page }}
-                        </a>
-                    @endif
-                @endforeach
-            @endif
-        @endforeach
+        @endfor
 
         {{-- Pagination Elements (Mobile - Custom 4 item sliding window) --}}
         @php

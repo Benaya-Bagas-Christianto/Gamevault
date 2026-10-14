@@ -23,7 +23,7 @@
     <tr>
         <td style="background-color:#76b900; padding:0;">
             <a href="{{ $url }}" style="display:inline-block; padding:16px 40px; font-size:15px; font-weight:800; color:#000000; text-decoration:none; letter-spacing:0.5px; font-family:'Segoe UI',Arial,sans-serif;">
-                🔒 Reset Password Sekarang
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px; margin-top:-2px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> Reset Password Sekarang
             </a>
         </td>
     </tr>
@@ -33,7 +33,9 @@
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
     <tr>
         <td style="background-color:#0d0d10; border:1px solid #1e1e28; padding:20px 24px;">
-            <p style="margin:0 0 10px 0; font-size:13px; font-weight:700; color:#76b900;">📋 Catatan Penting:</p>
+            <p style="margin:0 0 10px 0; font-size:13px; font-weight:700; color:#76b900;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px; margin-top:-2px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Catatan Penting:
+            </p>
             <p style="margin:0 0 8px 0; font-size:13px; color:#888898; line-height:1.6;">• Link ini akan <strong style="color:#ffffff;">kedaluwarsa dalam 60 menit</strong></p>
             <p style="margin:0 0 8px 0; font-size:13px; color:#888898; line-height:1.6;">• Jika kamu tidak meminta reset password, <strong style="color:#ffffff;">abaikan email ini</strong> — password kamu tidak akan berubah</p>
             <p style="margin:0; font-size:13px; color:#888898; line-height:1.6;">• Jika tombol tidak berfungsi, salin URL berikut ke browser kamu:</p>

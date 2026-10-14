@@ -39,7 +39,7 @@
 <tr>
     <td style="padding:16px 20px; background-color:#1a0e0e; border-left:3px solid #dc2626;">
         <p style="margin:0; font-size:13px; color:#fca5a5; line-height:1.6;">
-            <strong>⚠ Penting:</strong> Kode ini akan <strong>kedaluwarsa dalam 5 menit</strong>. Jangan pernah membagikan kode ini kepada siapa pun, termasuk pihak GameVault.
+            <strong><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:4px; margin-top:-2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Penting:</strong> Kode ini akan <strong>kedaluwarsa dalam 5 menit</strong>. Jangan pernah membagikan kode ini kepada siapa pun, termasuk pihak GameVault.
         </p>
     </td>
 </tr>

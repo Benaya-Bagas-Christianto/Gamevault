@@ -16,6 +16,15 @@ return Application::configure(basePath: dirname(__DIR__))
             'admin' => \App\Http\Middleware\IsAdmin::class,
         ]);
         
+        $middleware->redirectGuestsTo(function (Request $request) {
+            if ($request->is('cart*')) {
+                session()->flash('warning', 'Silakan login terlebih dahulu untuk mengakses keranjang belanja.');
+            } elseif ($request->is('wishlist*')) {
+                session()->flash('warning', 'Silakan login terlebih dahulu untuk mengakses wishlist.');
+            }
+            return route('login');
+        });
+
         $middleware->validateCsrfTokens(except: [
             'checkout/callback',
         ]);

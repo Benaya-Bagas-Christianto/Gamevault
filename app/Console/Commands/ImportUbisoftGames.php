@@ -3,140 +3,217 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\Game;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use App\Models\Game;
+use App\Models\GameGallery;
 use Carbon\Carbon;
 
 class ImportUbisoftGames extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'import:ubisoft';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Import popular Ubisoft games from Steam API';
+    protected $signature = 'steam:ubisoft';
+    protected $description = 'Import Ubisoft games and DLCs from Steam API';
 
     protected $appIds = [
-        359550, // Rainbow Six Siege
-        2208920, // AC Valhalla
-        812140, // AC Odyssey
-        582160, // AC Origins
-        2369390, // Far Cry 6
-        552520, // Far Cry 5
-        220240, // Far Cry 3
-        447040, // Watch Dogs 2
-        460930, // Ghost Recon Wildlands
-        304390, // For Honor
-        646910, // The Crew 2
-        365590, // The Division
-        213670, // South Park: The Stick of Truth
-        242550, // Rayman Legends
-        235600, // Splinter Cell Blacklist
+        // Assassin's Creed
+        15100, 33230, 48190, 201870, 911400, 242050, 311560, 289650, 368500, 582160, 812140, 2208920,
+        // Far Cry
+        13520, 19900, 220240, 233270, 298110, 371660, 552520, 883710, 2369390,
+        // Watch Dogs
+        243470, 447040, 2239550,
+        // Tom Clancy's
+        359550, 460930, 2231380, 365590, 2221490, 235600,
+        // Others
+        304390, 241560, 646910, 2698940, 207490, 242550, 213670, 481900, 2254670, 460920,
+        2208920 // Just in case Valhalla
     ];
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
-        $this->info("Memulai proses import " . count($this->appIds) . " game Ubisoft dari Steam...");
+        $this->info('Starting Ubisoft Games Sync (Resumable)...');
+        $this->appIds = array_unique($this->appIds);
 
         foreach ($this->appIds as $appId) {
-            $this->info("Fetching app ID: {$appId}...");
+            if (Game::where('steam_appid', $appId)->exists()) {
+                $this->info("Game {$appId} already exists. Skipping main fetch.");
+                $gameModel = Game::where('steam_appid', $appId)->first();
+            } else {
+                $this->info("Fetching Game AppID: {$appId}");
+                $gameModel = $this->fetchAndSaveApp($appId, 'game');
+            }
+            
+            if ($gameModel && isset($gameModel->steam_dlc_ids)) {
+                $dlcIds = $gameModel->steam_dlc_ids;
+                // Import all DLCs for Ubisoft
+                foreach ($dlcIds as $dlcId) {
+                    if (!Game::where('steam_appid', $dlcId)->exists()) {
+                        $this->info("   -> Fetching DLC AppID: {$dlcId}");
+                        $this->fetchAndSaveApp($dlcId, 'dlc', $gameModel->id);
+                        usleep(500000);
+                    } else {
+                        $this->info("   -> DLC {$dlcId} already exists.");
+                    }
+                }
+            }
+            usleep(500000);
+        }
+
+        $this->info("Ubisoft Sync Complete!");
+    }
+
+    private function fetchAndSaveApp($appId, $defaultType, $parentId = null)
+    {
+        try {
             $response = Http::get("https://store.steampowered.com/api/appdetails", [
                 'appids' => $appId,
-                'cc' => 'id'
+                'cc' => 'id',
+                'l' => 'indonesian'
             ]);
 
             if (!$response->successful()) {
-                $this->error("Gagal mengambil data untuk app ID: {$appId}");
-                continue;
+                $this->error("Failed to fetch API for $appId");
+                return null;
             }
 
             $data = $response->json();
             
-            if (!isset($data[$appId]) || !$data[$appId]['success']) {
-                $this->error("App ID {$appId} tidak valid atau tidak sukses.");
-                continue;
+            if (!isset($data[$appId]['success']) || !$data[$appId]['success']) {
+                $this->warn("App $appId not found or success=false on Steam.");
+                return null;
             }
 
-            $gameData = $data[$appId]['data'];
-
-            $slug = Str::slug($gameData['name']);
-            if (Game::where('slug', $slug)->exists()) {
-                $this->warn("Game '{$gameData['name']}' sudah ada di database. Melewati...");
-                continue;
+            $appData = $data[$appId]['data'];
+            
+            $steamType = $appData['type'] ?? 'game';
+            $type = $defaultType;
+            if ($steamType === 'dlc' || $steamType === 'music') {
+                $type = 'dlc';
+            } elseif ($steamType === 'game') {
+                $type = 'game';
             }
 
             $price = 0;
-            if (isset($gameData['is_free']) && !$gameData['is_free'] && isset($gameData['price_overview'])) {
-                $price = $gameData['price_overview']['initial'] / 100;
+            $discountPercent = 0;
+            $originalPrice = null;
+            if (isset($appData['is_free']) && $appData['is_free']) {
+                $price = 0;
+            } elseif (isset($appData['price_overview'])) {
+                $po = $appData['price_overview'];
+                $price = $po['final'] / 100;
+                
+                if (isset($po['discount_percent']) && $po['discount_percent'] > 0) {
+                    $discountPercent = $po['discount_percent'];
+                    $originalPrice = $po['initial'] / 100;
+                } elseif (isset($po['initial']) && $po['initial'] > $po['final']) {
+                    $originalPrice = $po['initial'] / 100;
+                    $discountPercent = round((($originalPrice - $price) / $originalPrice) * 100);
+                }
             }
 
             $genres = [];
-            if (isset($gameData['genres'])) {
-                foreach ($gameData['genres'] as $genreObj) {
-                    $genres[] = $genreObj['description'];
+            if (isset($appData['genres'])) {
+                foreach ($appData['genres'] as $g) {
+                    $genres[] = $g['description'];
                 }
             }
 
-            $releaseDate = null;
-            if (isset($gameData['release_date']) && !$gameData['release_date']['coming_soon']) {
+            $desc = $appData['detailed_description'] ?? ($appData['short_description'] ?? 'No description.');
+
+            $releaseDate = now();
+            if (isset($appData['release_date']['date']) && !empty($appData['release_date']['date'])) {
                 try {
-                    $releaseDate = Carbon::parse($gameData['release_date']['date'])->format('Y-m-d');
+                    $releaseDate = Carbon::parse($appData['release_date']['date'])->format('Y-m-d');
                 } catch (\Exception $e) {
-                    $releaseDate = null;
                 }
             }
 
-            $coverPath = null;
-            if (isset($gameData['header_image'])) {
-                try {
-                    $imgContent = Http::get($gameData['header_image'])->body();
-                    $filename = 'covers/ubisoft_' . $appId . '_' . time() . '.jpg';
-                    Storage::disk('public')->put($filename, $imgContent);
-                    $coverPath = $filename;
-                } catch (\Exception $e) {
-                    $this->error("Gagal mendownload cover untuk {$gameData['name']}");
+            $pcRequirements = $appData['pc_requirements'] ?? null;
+
+            $packages = [];
+            if (isset($appData['package_groups']) && count($appData['package_groups']) > 0) {
+                $subs = $appData['package_groups'][0]['subs'] ?? [];
+                foreach ($subs as $sub) {
+                    $pkgDiscountPct = (int)$sub['percent_savings'];
+                    if ($pkgDiscountPct === 0 && isset($sub['percent_savings_text'])) {
+                        $pkgDiscountPct = (int)preg_replace('/[^0-9]/', '', $sub['percent_savings_text']);
+                    }
+                    $pkgPrice = $sub['price_in_cents_with_discount'] / 100;
+                    $pkgOriginalPrice = $pkgPrice;
+                    if ($pkgDiscountPct > 0) {
+                        $pkgOriginalPrice = round($pkgPrice / (1 - ($pkgDiscountPct / 100)));
+                    }
+                    
+                    $name = $sub['option_text'];
+                    $name = preg_replace('/ - <span class="discount_original_price">.*?<\/span>.*/', '', $name);
+                    $name = preg_replace('/ - Rp.*/', '', $name);
+
+                    $packages[] = [
+                        'id' => $sub['packageid'],
+                        'name' => $name,
+                        'price' => $pkgPrice,
+                        'original_price' => $pkgOriginalPrice,
+                        'discount_percent' => $pkgDiscountPct
+                    ];
                 }
             }
 
-            $game = Game::create([
-                'title' => $gameData['name'],
-                'slug' => $slug,
-                'description' => $gameData['detailed_description'] ?? $gameData['short_description'] ?? '',
-                'price' => $price,
-                'genre' => $genres,
-                'developer' => isset($gameData['developers']) ? implode(', ', $gameData['developers']) : 'Ubisoft',
-                'publisher' => isset($gameData['publishers']) ? implode(', ', $gameData['publishers']) : 'Ubisoft',
-                'release_date' => $releaseDate,
-                'cover_image' => $coverPath,
-                'is_active' => true,
-            ]);
+            $model = Game::updateOrCreate(
+                ['title' => $appData['name']],
+                [
+                    'description' => $desc,
+                    'price' => $price,
+                    'original_price' => $originalPrice,
+                    'discount_percent' => $discountPercent,
+                    'genre' => $genres,
+                    'cover_image' => $appData['header_image'] ?? null,
+                    'developer' => isset($appData['developers']) ? implode(', ', $appData['developers']) : null,
+                    'publisher' => isset($appData['publishers']) ? implode(', ', $appData['publishers']) : null,
+                    'release_date' => $releaseDate,
+                    'is_active' => true,
+                    'type' => $type,
+                    'parent_id' => $parentId,
+                    'steam_appid' => $appId,
+                    'pc_requirements' => $pcRequirements,
+                    'packages' => $packages,
+                ]
+            );
 
-            if (isset($gameData['movies'])) {
-                foreach ($gameData['movies'] as $movie) {
-                    if (isset($movie['mp4']['max'])) {
-                        $game->galleries()->create([
-                            'type' => 'external_mp4',
-                            'path' => $movie['mp4']['max']
+            GameGallery::where('game_id', $model->id)->delete();
+            
+            if (isset($appData['movies'])) {
+                foreach ($appData['movies'] as $movie) {
+                    $path = $movie['mp4']['max'] ?? ($movie['webm']['max'] ?? ($movie['mp4']['480'] ?? ($movie['webm']['480'] ?? ($movie['hls_h264'] ?? null))));
+                    if ($path) {
+                        GameGallery::create([
+                            'game_id' => $model->id,
+                            'type' => 'video',
+                            'path' => $path,
+                            'thumbnail' => $movie['thumbnail'] ?? null
                         ]);
                     }
                 }
             }
 
-            $this->info("Berhasil menambahkan {$gameData['name']}!");
-        }
+            if (isset($appData['screenshots'])) {
+                foreach ($appData['screenshots'] as $ss) {
+                    GameGallery::create([
+                        'game_id' => $model->id,
+                        'type' => 'image',
+                        'path' => $ss['path_full'] ?? $ss['path_thumbnail']
+                    ]);
+                }
+            }
 
-        $this->info("Proses import selesai!");
+            if (isset($appData['dlc'])) {
+                $model->steam_dlc_ids = $appData['dlc'];
+            }
+
+            return $model;
+
+        } catch (\Exception $e) {
+            $this->error("Error processing $appId: " . $e->getMessage());
+            return null;
+        }
     }
 }

@@ -16,11 +16,24 @@
 
 <div class="container" style="padding-top:40px;padding-bottom:64px;">
 
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px;flex-wrap:wrap;">
         <h1 style="font-size:1.8rem;font-weight:800;color:var(--c-ink);margin:0;">Keranjang Belanja</h1>
         @if(count($cartGroups))
         <span style="background:var(--c-primary);color:#000;font-size:0.8rem;font-weight:700;padding:4px 12px;border-radius: 0;">{{ count($cartGroups) }} item</span>
         @endif
+    </div>
+
+    {{-- Multi-Select Action Bar (hidden by default) --}}
+    <div id="bulk-action-bar" style="display:none;position:sticky;top:70px;z-index:100;background:#0e1f00;border:1px solid var(--c-primary);padding:12px 20px;margin-bottom:16px;border-radius:0;display:none;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:12px;">
+            <span id="selected-count-label" style="font-size:0.9rem;color:var(--c-primary);font-weight:700;">0 item dipilih</span>
+            <button id="select-all-btn" onclick="selectAllItems()" style="background:rgba(118,185,0,0.1);border:1px solid var(--c-primary);color:var(--c-primary);font-size:0.8rem;font-weight:600;padding:5px 12px;cursor:pointer;border-radius:0;">Pilih Semua</button>
+            <button onclick="deselectAll()" style="background:rgba(255,255,255,0.05);border:1px solid var(--c-hairline);color:var(--c-mute);font-size:0.8rem;padding:5px 12px;cursor:pointer;border-radius:0;">Batal</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+            <button id="bulk-buy-btn" onclick="bulkCheckout()" style="background:var(--c-primary);color:#000;font-size:0.85rem;font-weight:700;padding:8px 20px;border:none;cursor:pointer;border-radius:0;"><i class="fas fa-credit-card me-1"></i>Beli Terpilih</button>
+            <button id="bulk-delete-btn" onclick="bulkDelete()" style="background:rgba(220,38,38,0.1);border:1px solid #dc2626;color:#f87171;font-size:0.85rem;font-weight:600;padding:8px 20px;cursor:pointer;border-radius:0;"><i class="fas fa-trash me-1"></i>Hapus Terpilih</button>
+        </div>
     </div>
 
     @if(empty($cartGroups))
@@ -43,12 +56,39 @@
             grid-template-columns: 1fr 340px;
             gap: 24px;
         }
+        .cart-item-body {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            grid-template-areas: 
+                "title price"
+                "os action";
+            padding: 16px 24px;
+            gap: 16px;
+        }
+        .cart-item-title-block { grid-area: title; }
+        .cart-price-block-wrapper { grid-area: price; justify-self: end; }
+        .cart-os-icons { grid-area: os; align-self: end; }
+        .cart-item-actions { grid-area: action; justify-self: end; align-self: end; margin-top:0 !important; }
+
         @media (max-width: 992px) {
             .cart-layout {
                 grid-template-columns: 1fr;
             }
         }
         @media (max-width: 768px) {
+            .cart-item-wrapper {
+                position: relative;
+            }
+            .cart-item-checkbox-wrap {
+                position: absolute;
+                top: 12px;
+                left: 12px;
+                z-index: 10;
+                padding: 0 !important;
+                background: rgba(0,0,0,0.65);
+                border-radius: 4px;
+            }
             .cart-item-row {
                 flex-direction: column !important;
             }
@@ -60,24 +100,19 @@
                 width: 100% !important;
                 height: 100% !important;
                 object-fit: cover !important;
-                aspect-ratio: 16/9;
+                aspect-ratio: 460/215;
             }
             .cart-item-body {
-                flex-direction: column !important;
+                grid-template-columns: 1fr auto;
+                grid-template-areas: 
+                    "title title"
+                    "os price"
+                    ". action";
                 padding: 16px !important;
-                gap: 16px;
+                gap: 12px 8px !important;
             }
-            .cart-item-info {
-                padding-right: 0 !important;
-            }
-            .cart-item-price {
-                align-items: flex-start !important;
-                text-align: left !important;
-                width: 100%;
-            }
-            .cart-price-block {
-                width: 100%;
-                justify-content: space-between;
+            .cart-price-block-wrapper {
+                margin-top: 0 !important;
             }
             .cart-checkout-actions {
                 flex-direction: column !important;
@@ -125,9 +160,20 @@
                         $discountPercent = round((($originalPrice - $price) / $originalPrice) * 100);
                     }
                 @endphp
-                <div class="cart-item-row" data-game-slug="{{ $game->slug }}" style="display:flex;align-items:stretch;background:var(--c-surface-soft);border-radius: 0;overflow:hidden;position:relative;">
+                <div class="cart-item-wrapper" style="display:flex; align-items:stretch; background:var(--c-surface-soft); border-radius:0; overflow:hidden;">
+                    {{-- Custom Checkbox --}}
+                    <div class="cart-item-checkbox-wrap" style="flex-shrink:0; display:flex; align-items:flex-start; padding:16px 0 16px 16px;">
+                        <label style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.25);cursor:pointer;border-radius:0;transition:all 0.2s;" 
+                               onmouseenter="this.style.borderColor='var(--c-primary)'" 
+                               onmouseleave="this.style.borderColor=this.querySelector('input').checked?'var(--c-primary)':'rgba(255,255,255,0.25)'">
+                            <input type="checkbox" class="cart-item-checkbox" data-slug="{{ $game->slug }}" data-price="{{ $price }}" onchange="onCartCheckboxChange(this)" style="position:absolute;opacity:0;width:0;height:0;">
+                            <svg class="check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#76b900" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </label>
+                    </div>
+
+                    <div class="cart-item-row" data-game-slug="{{ $game->slug }}" data-game-price="{{ $price }}" style="flex:1; display:flex;align-items:stretch;position:relative;">
                     {{-- Cover --}}
-                    <a href="{{ route('game.show', $game->slug) }}" class="cart-item-cover" style="flex-shrink:0;width:280px;display:flex;align-items:flex-start;background:transparent;padding:16px 16px 16px 16px;">
+                    <a href="{{ route('game.show', $game->slug) }}" class="cart-item-cover" style="flex-shrink:0;width:264px;display:flex;align-items:flex-start;background:transparent;padding:16px;">
                         @if($game->cover_image)
                             <img src="{{ $game->cover_image_url }}" alt="{{ $title }}" style="width:100%;height:auto;object-fit:contain;display:block;">
                         @else
@@ -138,29 +184,31 @@
                     </a>
 
                     {{-- Info & Price --}}
-                    <div class="cart-item-body" style="flex:1;display:flex;align-items:flex-start;justify-content:space-between;padding:16px 24px;">
+                    <div class="cart-item-body">
                         {{-- Info --}}
-                        <div class="cart-item-info" style="min-width:0;padding-right:16px;display:flex;flex-direction:column;height:100%;justify-content:space-between;">
-                            <div>
-                                <a href="{{ route('game.show', $game->slug) }}" style="text-decoration:none;">
-                                    <h5 style="color:var(--c-ink);font-weight:700;font-size:1.2rem;margin-bottom:8px;line-height:1.2;">{{ $title }}</h5>
-                                </a>
-                                @if($isBundle)
-                                    <div style="color:var(--c-mute);font-size:0.85rem;margin-bottom:8px;">
-                                        Includes {{ $group['items']->count() }} items: 
-                                        {{ $group['items']->pluck('title')->implode(', ') }}
-                                    </div>
-                                @endif
-                                <i class="fab fa-windows" style="color:var(--c-mute);font-size:1rem;margin-bottom:8px;display:block;"></i>
-                            </div>
+                        <div class="cart-item-title-block" style="min-width:0;display:flex;flex-direction:column;">
+                            <a href="{{ route('game.show', $game->slug) }}" style="text-decoration:none;">
+                                <h5 style="color:var(--c-ink);font-weight:700;font-size:1.2rem;margin-bottom:8px;line-height:1.2;">{{ $title }}</h5>
+                            </a>
+                            @if($isBundle)
+                                <div style="color:var(--c-mute);font-size:0.85rem;margin-bottom:8px;">
+                                    Includes {{ $group['items']->count() }} items: 
+                                    {{ $group['items']->pluck('title')->implode(', ') }}
+                                </div>
+                            @endif
+                        </div>
+                        
+                        {{-- OS Icons --}}
+                        <div class="cart-os-icons">
+                            <i class="fab fa-windows" style="color:var(--c-mute);font-size:1rem;"></i>
                         </div>
 
                         {{-- Price Block --}}
-                        <div class="cart-item-price" style="text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;height:100%;">
+                        <div class="cart-price-block-wrapper" style="text-align:right;">
                             @if($price == 0)
                                 <div style="color:var(--c-primary);font-size:1.25rem;font-weight:800;margin-top:4px;">GRATIS</div>
                             @else
-                                <div class="cart-price-block" style="display:flex;align-items:center;gap:4px;background:#000;padding:2px;border-radius: 0;margin-top:4px;">
+                                <div class="cart-price-block" style="display:flex;align-items:center;gap:4px;background:#000;padding:2px;border-radius: 0;">
                                     @if($discountPercent > 0)
                                         <div style="background:var(--c-accent-green);color:var(--c-black);font-size:1.2rem;font-weight:800;padding:6px 8px;height:100%;display:flex;align-items:center;">
                                             -{{ $discountPercent }}%
@@ -174,17 +222,15 @@
                                     @endif
                                 </div>
                             @endif
+                        </div>
 
-                            {{-- Remove Link --}}
-                            <div style="display:flex;gap:12px;font-size:0.75rem;color:var(--c-mute);margin-top:16px;">
-                                <span style="cursor:pointer;transition:color 0.2s;" onmouseenter="this.style.color='var(--c-body)';" onmouseleave="this.style.color='var(--c-mute)';">Tambah</span>
-                                <span>|</span>
-                                @if($isBundle)
-                                <button class="remove-bundle-btn" data-game-slug="{{ $game->slug }}" style="background:none;border:none;color:var(--c-mute);text-decoration:none;cursor:pointer;padding:0;transition:color 0.2s;" onmouseenter="this.style.color='var(--c-body)';" onmouseleave="this.style.color='var(--c-mute)';">Hapus</button>
-                                @else
-                                <button class="remove-cart-btn" data-game-slug="{{ $game->slug }}" style="background:none;border:none;color:var(--c-mute);text-decoration:none;cursor:pointer;padding:0;transition:color 0.2s;" onmouseenter="this.style.color='var(--c-body)';" onmouseleave="this.style.color='var(--c-mute)';">Hapus</button>
-                                @endif
-                            </div>
+                        {{-- Remove Link --}}
+                        <div class="cart-item-actions" style="display:flex;gap:12px;font-size:0.75rem;color:var(--c-mute);">
+                            @if($isBundle)
+                            <button class="remove-bundle-btn" data-game-slug="{{ $game->slug }}" style="background:none;border:none;color:var(--c-mute);text-decoration:none;cursor:pointer;padding:0;transition:color 0.2s;text-decoration:underline;" onmouseenter="this.style.color='var(--c-body)';" onmouseleave="this.style.color='var(--c-mute)';">Hapus</button>
+                            @else
+                            <button class="remove-cart-btn" data-game-slug="{{ $game->slug }}" style="background:none;border:none;color:var(--c-mute);text-decoration:none;cursor:pointer;padding:0;transition:color 0.2s;text-decoration:underline;" onmouseenter="this.style.color='var(--c-body)';" onmouseleave="this.style.color='var(--c-mute)';">Hapus</button>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -226,7 +272,7 @@
                 <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:16px;">
                     @foreach($recommendations as $game)
                     <a href="{{ route('game.show', $game->slug) }}" style="display:block;text-decoration:none;background:var(--c-surface-soft);border-radius: 0;overflow:hidden;position:relative;transition:transform 0.2s;" onmouseenter="this.style.transform='translateY(-2px)';" onmouseleave="this.style.transform='translateY(0)';">
-                        <div style="width:100%;aspect-ratio:16/9;position:relative;">
+                        <div style="width:100%;aspect-ratio:460/215;position:relative;">
                             @if($game->cover_image)
                                 <img src="{{ $game->cover_image_url }}" alt="{{ $game->title }}" style="width:100%;height:100%;object-fit:cover;">
                             @else
@@ -377,20 +423,94 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     }, 350);
 
-                    if (typeof showCenterPopup==='function') showCenterPopup(data.message||'Item dihapus dari keranjang', true);
+                    if (typeof showCenterPopup === 'function') showCenterPopup(data.message || 'Item dihapus dari keranjang', true);
+                    updateBulkBar();
                 } else {
                     this.disabled = false;
-                    this.innerHTML = '<i class="fas fa-trash-alt" style="font-size:0.85rem;"></i>';
-                    if (typeof showCenterPopup==='function') showCenterPopup(data.message||'Gagal menghapus item', false);
+                    this.innerHTML = 'Hapus';
+                    if (typeof showCenterPopup === 'function') showCenterPopup(data.message || 'Gagal menghapus item', false);
                 }
             })
             .catch(() => {
                 this.disabled = false;
-                this.innerHTML = '<i class="fas fa-trash-alt" style="font-size:0.85rem;"></i>';
-                if (typeof showCenterPopup==='function') showCenterPopup('Terjadi kesalahan', false);
+                this.innerHTML = 'Hapus';
+                if (typeof showCenterPopup === 'function') showCenterPopup('Terjadi kesalahan', false);
             });
         });
     });
+
+    // --- Multi-select Logic ---
+    function updateBulkBar() {
+        const checked = document.querySelectorAll('.cart-item-checkbox:checked');
+        const bar = document.getElementById('bulk-action-bar');
+        const label = document.getElementById('selected-count-label');
+        if (checked.length > 0) {
+            bar.style.display = 'flex';
+            label.textContent = checked.length + ' item dipilih';
+        } else {
+            bar.style.display = 'none';
+        }
+    }
+    window.onCartCheckboxChange = function(checkbox) {
+        const label = checkbox.closest('label');
+        const wrapper = checkbox.closest('.cart-item-wrapper');
+        const row = wrapper ? wrapper.querySelector('.cart-item-row') : null;
+        const icon = label ? label.querySelector('.check-icon') : null;
+        if (icon) icon.style.display = checkbox.checked ? 'block' : 'none';
+        if (label) {
+            label.style.borderColor = checkbox.checked ? 'var(--c-primary)' : 'rgba(255,255,255,0.25)';
+            label.style.background = checkbox.checked ? 'rgba(118,185,0,0.15)' : 'rgba(255,255,255,0.05)';
+        }
+        if (row) row.classList.toggle('is-checked', checkbox.checked);
+        updateBulkBar();
+    };
+    window.selectAllItems = function() {
+        document.querySelectorAll('.cart-item-checkbox').forEach(cb => cb.checked = true);
+        updateBulkBar();
+    };
+    window.deselectAll = function() {
+        document.querySelectorAll('.cart-item-checkbox').forEach(cb => cb.checked = false);
+        updateBulkBar();
+    };
+
+    window.bulkDelete = function() {
+        const checked = document.querySelectorAll('.cart-item-checkbox:checked');
+        if (!checked.length) return;
+        const slugs = Array.from(checked).map(cb => cb.dataset.slug);
+        const total = slugs.length;
+        let done = 0;
+        slugs.forEach(slug => {
+            const isBundle = document.querySelector(`.remove-bundle-btn[data-game-slug="${slug}"]`) !== null;
+            const url = isBundle ? `/cart/${slug}/bundle` : `/cart/${slug}`;
+            fetch(url, {
+                method: 'DELETE',
+                headers: {'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json'}
+            }).then(r => r.json()).then(data => {
+                const row = document.querySelector(`.cart-item-row[data-game-slug="${slug}"]`);
+                if (row) {
+                    const wrapper = row.closest('.cart-item-wrapper');
+                    const elementToRemove = wrapper ? wrapper : row;
+                    elementToRemove.style.transition = 'all 0.3s';
+                    elementToRemove.style.opacity = '0';
+                    elementToRemove.style.transform = 'translateX(20px)';
+                    setTimeout(() => elementToRemove.remove(), 300);
+                }
+                if (typeof updateBadge === 'function') updateBadge('cart-count', data.count);
+                done++;
+                if (done === total) {
+                    if (typeof showCenterPopup === 'function') showCenterPopup(total + ' item dihapus dari keranjang', true);
+                    updateBulkBar();
+                }
+            });
+        });
+    };
+
+    window.bulkCheckout = function() {
+        const checked = document.querySelectorAll('.cart-item-checkbox:checked');
+        if (!checked.length) return;
+        // For now just start normal checkout with all cart items
+        startCheckout(document.getElementById('checkout-btn-left'));
+    };
 });
 </script>
 
@@ -434,6 +554,11 @@ function startCheckout(btnElement) {
             onSuccess: function(result) {
                 btn.disabled = true;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Menyimpan...';
+                
+                if (typeof showLoadingPopup === 'function') {
+                    showLoadingPopup('Memproses...', 'Mohon tunggu sebentar, sedang menyimpan game ke Library Anda.');
+                }
+
                 // Finalize: simpan ke library, hapus dari cart
                 fetch('{{ route("checkout.finalize") }}', {
                     method: 'POST',

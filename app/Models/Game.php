@@ -27,6 +27,7 @@ class Game extends Model
         'original_price',
         'pc_requirements',
         'packages',
+        'steam_appid',
     ];
 
     protected $casts = [

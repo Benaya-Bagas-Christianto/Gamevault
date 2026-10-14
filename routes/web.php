@@ -20,6 +20,7 @@ Route::get('/api/search/suggestions', [HomeController::class, 'searchSuggestions
 Route::get('/categories', [HomeController::class, 'categories'])->name('categories');
 Route::get('/game/{game:slug}', [GameController::class, 'show'])->name('game.show');
 Route::get('/game/{game:slug}/dlc', [GameController::class, 'dlc'])->name('game.dlc');
+Route::get('/game/{game:slug}/bundle', [GameController::class, 'bundle'])->name('game.bundle');
 Route::get('/creator/{name}', [HomeController::class, 'creator'])->name('creator.show');
 Route::view('/bantuan', 'bantuan')->name('bantuan');
 Route::post('/bantuan/chat', [\App\Http\Controllers\AiChatController::class, 'chat'])->name('bantuan.chat');

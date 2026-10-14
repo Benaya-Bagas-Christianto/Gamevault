@@ -22,7 +22,9 @@
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
 <tr>
     <td style="background-color:#1c0a0a; border:1px solid #3d1212; border-left:4px solid #dc2626; padding:20px 24px;">
-        <p style="margin:0 0 8px 0; font-size:13px; font-weight:700; color:#ef4444;">⚠ Peringatan Keamanan</p>
+        <p style="margin:0 0 8px 0; font-size:13px; font-weight:700; color:#ef4444;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px; margin-top:-2px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>Peringatan Keamanan
+        </p>
         <p style="margin:0; font-size:13px; color:#fca5a5; line-height:1.7;">
             Jika Anda <strong>tidak melakukan tindakan ini</strong>, segera hubungi tim Support kami karena akun Anda mungkin dalam bahaya. Segera ganti password Anda.
         </p>

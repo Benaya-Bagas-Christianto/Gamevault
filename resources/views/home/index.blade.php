@@ -374,7 +374,7 @@ if ($game->price == 0) {
 
 return '
 <div class="slider-item" style="background:var(--c-surface-soft);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius: 0;overflow:hidden;border:1px solid var(--c-hairline);display:flex;flex-direction:column;position:relative;transition:border-color 0.2s;" onmouseenter="this.style.borderColor=\'var(--c-primary)\';" onmouseleave="this.style.borderColor=\'var(--c-hairline)\';">
-    <a href="'.route('game.show', $game->slug).'" style="display:block;position:relative;overflow:hidden;aspect-ratio:16/9;">
+    <a href="'.route('game.show', $game->slug).'" style="display:block;position:relative;overflow:hidden;aspect-ratio:460/215;">
         '.$statusHtml.$rankHtml.$badge.$img.'
     </a>
     <div style="padding:var(--sp-xl);flex:1;display:flex;flex-direction:column;">
@@ -392,6 +392,33 @@ return '
 </div>';
 }
 @endphp
+
+{{-- ===================== SPECIAL OFFERS (DISCOUNTED) SLIDER ===================== --}}
+@if($discountGames->count() > 0)
+<section class="container" style="margin-bottom:var(--sp-section);">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-lg);">
+        <div style="display:flex;align-items:center;gap:var(--sp-md);">
+            <div style="width:4px;height:24px;background:var(--c-primary);border-radius: 0;box-shadow:0 0 10px rgba(118,185,0,0.5);"></div>
+            <h2 style="font-size:1.5rem;font-weight:800;color:var(--c-ink);margin:0;">Penawaran Spesial</h2>
+        </div>
+        <div style="display:flex;gap:var(--sp-sm);">
+            <button onclick="scrollSlider('discount-slider', -1)" class="slider-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"><polyline points="14 19 7 12 14 5"></polyline></svg>
+            </button>
+            <button onclick="scrollSlider('discount-slider', 1)" class="slider-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"><polyline points="10 19 17 12 10 5"></polyline></svg>
+            </button>
+        </div>
+    </div>
+    <div class="slider-wrapper">
+        <div id="discount-slider" class="slider-container hide-scrollbar">
+            @foreach($discountGames as $game)
+            {!! renderGameCard($game, null, $ownedIds, $cartIds ?? [], $wishlistIds ?? []) !!}
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
 
 {{-- ===================== TRENDING SLIDER ===================== --}}
 @if($trendingGames->count() > 0)
@@ -447,32 +474,7 @@ return '
 </section>
 @endif
 
-{{-- ===================== NEW RELEASES SLIDER ===================== --}}
-@if($newGames->count() > 0)
-<section class="container" style="margin-bottom:var(--sp-section);">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--sp-lg);">
-        <div style="display:flex;align-items:center;gap:var(--sp-md);">
-            <div style="width:4px;height:24px;background:var(--c-primary);border-radius: 0;box-shadow:0 0 10px rgba(118,185,0,0.5);"></div>
-            <h2 style="font-size:1.5rem;font-weight:800;color:var(--c-ink);margin:0;">Baru Ditambahkan</h2>
-        </div>
-        <div style="display:flex;gap:var(--sp-sm);">
-            <button onclick="scrollSlider('new-slider', -1)" class="slider-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"><polyline points="14 19 7 12 14 5"></polyline></svg>
-            </button>
-            <button onclick="scrollSlider('new-slider', 1)" class="slider-btn">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"><polyline points="10 19 17 12 10 5"></polyline></svg>
-            </button>
-        </div>
-    </div>
-    <div class="slider-wrapper">
-        <div id="new-slider" class="slider-container hide-scrollbar">
-            @foreach($newGames as $game)
-            {!! renderGameCard($game, null, $ownedIds, $cartIds ?? [], $wishlistIds ?? []) !!}
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
+
 
 {{-- ===================== FREE GAMES SLIDER ===================== --}}
 @if($freeGames->count() > 0)

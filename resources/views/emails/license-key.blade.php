@@ -61,7 +61,9 @@
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
     <tr>
         <td style="background-color:#0d0d10; border:1px solid #1e1e28; padding:20px 24px;">
-            <p style="margin:0 0 8px 0; font-size:13px; font-weight:700; color:#76b900;">📌 Informasi Penting:</p>
+            <p style="margin:0 0 8px 0; font-size:13px; font-weight:700; color:#76b900;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px; margin-top:-2px;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>Informasi Penting:
+            </p>
             <p style="margin:0 0 6px 0; font-size:13px; color:#888898; line-height:1.6;">• Simpan kunci lisensi ini dengan aman — jangan dibagikan kepada orang lain</p>
             <p style="margin:0 0 6px 0; font-size:13px; color:#888898; line-height:1.6;">• Anda dapat melihat lisensi kapan saja melalui <a href="{{ route('profile.index') }}" style="color:#76b900; text-decoration:none; font-weight:700;">Profil GameVault Anda</a></p>
             <p style="margin:0; font-size:13px; color:#888898; line-height:1.6;">• Hubungi Support jika ada kendala dalam penggunaan lisensi</p>
@@ -71,7 +73,7 @@
 
 <!-- Sign off -->
 <p style="margin:0; font-size:14px; color:#555568; line-height:1.6;">
-    Selamat bermain! 🎮<br>
+    Selamat bermain! <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-left:4px; margin-top:-2px;"><rect x="2" y="6" width="20" height="12" rx="2" ry="2"></rect><line x1="6" y1="12" x2="10" y2="12"></line><line x1="8" y1="10" x2="8" y2="14"></line><line x1="15" y1="13" x2="15.01" y2="13"></line><line x1="18" y1="11" x2="18.01" y2="11"></line></svg><br>
     <strong style="color:#76b900;">Tim GameVault</strong>
 </p>
 

@@ -56,7 +56,7 @@ if (!function_exists('renderGameCard')) {
 
         return '
         <div class="slider-item" style="background:var(--c-surface-soft);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius: 0;overflow:hidden;border:1px solid var(--c-hairline);display:flex;flex-direction:column;position:relative;transition:border-color 0.2s;"  >
-            <a href="'.route('game.show', $game->slug).'" style="display:block;position:relative;overflow:hidden;aspect-ratio:16/9;">
+            <a href="'.route('game.show', $game->slug).'" style="display:block;position:relative;overflow:hidden;aspect-ratio:460/215;">
                 '.$statusHtml.$rankHtml.$badge.$img.'
             </a>
             <div style="padding:var(--sp-xl);flex:1;display:flex;flex-direction:column;">

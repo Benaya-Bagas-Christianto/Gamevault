@@ -40,13 +40,30 @@ class GameController extends Controller
         $userReview    = null;
         $isInWishlist  = false;
         $isInCart      = false;
+        $isBundleInCart = false;
         $isOwned       = false;
         $canReview     = false;
 
         if (Auth::check()) {
             $user = Auth::user();
             $isInWishlist = $user->wishlistedGames()->where('games.id', $game->id)->exists();
-            $isInCart     = $user->cartGames()->where('games.id', $game->id)->exists();
+            
+            $cartIds = $user->cartGames()->pluck('games.id')->toArray();
+            $isInCart = in_array($game->id, $cartIds);
+            
+            // Check if bundle is in cart
+            if ($game->dlcs && $game->dlcs->count() > 0) {
+                $isBundleInCart = $isInCart;
+                if ($isBundleInCart) {
+                    foreach ($game->dlcs as $dlc) {
+                        if (!in_array($dlc->id, $cartIds)) {
+                            $isBundleInCart = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            
             $isOwned      = $user->ownedGames()->where('games.id', $game->id)->exists();
             $userReview   = $user->reviews()->where('game_id', $game->id)->first();
             $canReview    = $isOwned && ! $userReview;
@@ -73,6 +90,7 @@ class GameController extends Controller
             'userReview',
             'isInWishlist',
             'isInCart',
+            'isBundleInCart',
             'isOwned',
             'canReview',
             'avgRating',
@@ -93,5 +111,75 @@ class GameController extends Controller
         }
 
         return view('game.dlc', compact('game', 'cartGameIds'));
+    }
+
+    public function bundle(Game $game)
+    {
+        abort_if(! $game->is_active, 404);
+
+        $game->load(['dlcs' => function ($q) {
+            $q->where('is_active', true);
+        }]);
+
+        // If no DLCs, redirect to game show
+        if (!$game->dlcs || $game->dlcs->count() === 0) {
+            return redirect()->route('game.show', $game->slug);
+        }
+
+        $cartGameIds = [];
+        $isBundleInCart = false;
+        $isOwned = false;
+
+        if (Auth::check()) {
+            $user = Auth::user();
+            $cartGameIds = $user->cartGames()->pluck('games.id')->toArray();
+            $isInCart = in_array($game->id, $cartGameIds);
+
+            $isBundleInCart = $isInCart;
+            if ($isBundleInCart) {
+                foreach ($game->dlcs as $dlc) {
+                    if (!in_array($dlc->id, $cartGameIds)) {
+                        $isBundleInCart = false;
+                        break;
+                    }
+                }
+            }
+
+            $isOwned = $user->ownedGames()->where('games.id', $game->id)->exists();
+        }
+
+        // Pricing calculations
+        $totalOriginalPrice = $game->price + $game->dlcs->sum('price');
+        $bundleDiscountPercent = 15;
+        $bundleDiscountAmount = round($totalOriginalPrice * ($bundleDiscountPercent / 100));
+        $bundlePrice = $totalOriginalPrice - $bundleDiscountAmount;
+
+        // Bundle information logic
+        $bundleDescription = null;
+        if (!empty($game->packages) && is_array($game->packages)) {
+            foreach ($game->packages as $pkg) {
+                if (isset($pkg['name']) && (stripos($pkg['name'], 'bundle') !== false || stripos($pkg['name'], 'edition') !== false || stripos($pkg['name'], 'complete') !== false)) {
+                    $bundleDescription = "Paket resmi " . $pkg['name'] . " untuk " . $game->title . " mencakup game dasar dan konten tambahan resmi pilihan.";
+                    break;
+                }
+            }
+        }
+
+        if (!$bundleDescription) {
+            $dlcCount = $game->dlcs->count();
+            $bundleDescription = "Paket Bundle Lengkap {$game->title} (Complete Collection) dirancang khusus bagi Anda yang ingin menikmati petualangan dan seluruh konten game ini secara menyeluruh. Paket ini mencakup game dasar beserta {$dlcCount} konten tambahan (DLC) resmi, termasuk seluruh ekspansi cerita, item kosmetik eksklusif, serta seluruh fitur tambahan digital. Dengan memilih paket bundle ini, Anda mendapatkan potongan harga istimewa sebesar {$bundleDiscountPercent}% dibandingkan membeli setiap item secara terpisah.";
+        }
+
+        return view('game.bundle', compact(
+            'game',
+            'cartGameIds',
+            'isBundleInCart',
+            'isOwned',
+            'totalOriginalPrice',
+            'bundleDiscountPercent',
+            'bundleDiscountAmount',
+            'bundlePrice',
+            'bundleDescription'
+        ));
     }
 }

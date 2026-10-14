@@ -7,7 +7,7 @@
     <tr>
         <td>
             <p style="margin:0 0 4px 0; font-size:12px; font-weight:700; color:#76b900; text-transform:uppercase; letter-spacing:2px;">Refund Disetujui</p>
-            <h1 style="margin:0; font-size:28px; font-weight:800; color:#ffffff; line-height:1.2;">Pengajuan Refund Disetujui ✓</h1>
+            <h1 style="margin:0; font-size:28px; font-weight:800; color:#ffffff; line-height:1.2;">Pengajuan Refund Disetujui <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#76b900" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-left:4px; margin-top:-4px;"><polyline points="20 6 9 17 4 12"></polyline></svg></h1>
         </td>
     </tr>
 </table>
@@ -63,7 +63,9 @@
 <table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:32px;">
     <tr>
         <td style="background-color:#0d0d10; border:1px solid #1e1e28; padding:20px 24px;">
-            <p style="margin:0 0 8px 0; font-size:13px; font-weight:700; color:#76b900;">📋 Informasi Proses Refund:</p>
+            <p style="margin:0 0 8px 0; font-size:13px; font-weight:700; color:#76b900;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle; margin-right:6px; margin-top:-2px;"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Informasi Proses Refund:
+            </p>
             <p style="margin:0 0 6px 0; font-size:13px; color:#888898; line-height:1.6;">• Dana akan dikembalikan ke metode pembayaran asli Anda dalam <strong style="color:#ffffff;">3–5 hari kerja</strong></p>
             <p style="margin:0 0 6px 0; font-size:13px; color:#888898; line-height:1.6;">• Waktu proses tergantung kebijakan bank atau penyedia layanan pembayaran Anda</p>
             <p style="margin:0; font-size:13px; color:#888898; line-height:1.6;">• Akses Anda ke game dan Kunci Lisensi telah dicabut</p>

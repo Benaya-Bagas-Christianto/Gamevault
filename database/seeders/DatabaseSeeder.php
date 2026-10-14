@@ -11,11 +11,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Admin user
-        User::create([
-            'name'     => 'Admin GameVault',
-            'email'    => 'admin@tokogame.com',
-            'password' => Hash::make('password'),
-            'role'     => 'admin',
+        User::firstOrCreate(
+            ['email' => 'admin@tokogame.com'],
+            [
+                'name'     => 'Admin GameVault',
+                'password' => Hash::make('password'),
+                'role'     => 'admin',
+            ]
+        );
+
+        $this->call([
+            DetailedGameSeeder::class,
         ]);
     }
 }
