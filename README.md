@@ -193,10 +193,19 @@ php artisan migrate
 php artisan storage:link
 ```
 
-**8. (Opsional) Jalankan seeder untuk data awal**
+**8. Jalankan seeder untuk data awal & akun Admin**
 ```bash
 php artisan db:seed
 ```
+> **Akun Admin Bawaan (setelah `db:seed`):**
+> - **Email:** `admin@tokogame.com`
+> - **Password:** `password`
+>
+> *(Opsional)* Untuk mengambil lebih banyak katalog game & harga terbaru langsung dari Steam API:
+> ```bash
+> php artisan steam:sync
+> php artisan steam:sync-prices
+> ```
 
 **9. Build aset frontend**
 ```bash
